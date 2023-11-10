@@ -1,0 +1,35 @@
+1. **Anmelde- / Registrierungsseite**:
+   - Ermöglicht Therapeuten und Kunden, sich in ihren Konten anzumelden oder sich zu registrieren, wenn sie neue Benutzer sind.
+
+2. **Startseite**:
+   - Die Hauptseite der Anwendung, auf der allgemeine Informationen, Neuigkeiten oder wichtige Nachrichten angezeigt werden können.
+
+3. **Therapeutenprofilseite**:
+   - Eine Seite, auf der Therapeuten ihr Profil verwalten können, indem sie persönliche und berufliche Informationen wie Qualifikationen und Spezialisierungen hinzufügen.
+
+4. **Kundenprofilseite**:
+   - Eine Seite, auf der Kunden ihr Profil verwalten können, indem sie persönliche Informationen, Krankengeschichte und andere relevante Informationen hinzufügen.
+
+5. **Sitzungsbuchungsseite**:
+   - Ermöglicht Kunden, Sitzungen bei verfügbaren Therapeuten zu buchen. Zeigt den Kalender und verfügbare Zeiten an.
+
+6. **Sitzungsverwaltungsseite (Therapeut)**:
+   - Für Therapeuten ermöglicht diese Seite das Anzeigen der gebuchten Sitzungen, das Stornieren von Sitzungen, das Hinzufügen von Anmerkungen und Dokumenten zu den Sitzungen.
+
+7. **Sitzungsansichtsseite (Kunde)**:
+   - Kunden können gebuchte Sitzungen anzeigen, Sitzungen neu planen, Sitzungen stornieren und relevante Informationen zu den Sitzungen abrufen.
+
+8. **Dokumenten- und Berichtsseite**:
+   - Ein Ort, an dem Therapeuten und Kunden Dokumente wie Therapieberichte hochladen, anzeigen und teilen können.
+
+9. **Rechnungs- und Zahlungsseite**:
+   - Kunden können Rechnungen anzeigen, Zahlungen leisten und ihre Transaktionshistorie nachverfolgen.
+
+10. **Einstellungsseite**:
+    - Ermöglicht Benutzern die Konfiguration von Einstellungen, Benachrichtigungen und anderen anwendungsbezogenen Einstellungen.
+
+11. **Kundensupportseite**:
+    - Ein Kontaktweg, über den Kunden Unterstützung und Hilfe bei Problemen oder Fragen erhalten können.
+
+12. **Kalenderseite (optional)**:
+    - Eine Kalenderansicht, die die Daten und Zeiten aller gebuchten Sitzungen anzeigt und einen Überblick über die Therapieaktivitäten bietet.
