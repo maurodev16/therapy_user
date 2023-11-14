@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../Controller/AppointmentController.dart';
 
 class AppointmentPage extends StatelessWidget {
+  final appointControler = Get.find<AppointmentController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,10 +31,10 @@ class AppointmentPage extends StatelessWidget {
                   DateTime.now().day), // Letzter sichtbarer Tag im Kalender
               selectedDayPredicate: (day) {
                 // Überprüfen, ob der Tag gebucht ist und deaktivieren
-                return AppointmentController.to.bookedDates.contains(day);
+                return appointControler.bookedDates.contains(day);
               },
               onDaySelected: (selectedDay, focusedDay) {
-                AppointmentController.to.selectedDay.value =
+                appointControler.selectedDay.value =
                     selectedDay.toLocal().toString().split(' ')[0];
               },
             ),
@@ -47,14 +48,14 @@ class AppointmentPage extends StatelessWidget {
               () => Wrap(
                 spacing: 8.0,
                 runSpacing: 8.0,
-                children: AppointmentController.to.availableTimes
+                children: appointControler.availableTimes
                     .map((time) => ElevatedButton(
                           onPressed: () {
-                            AppointmentController.to.selectedTime.value = time;
+                            appointControler.selectedTime.value = time;
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                AppointmentController.to.selectedTime.value ==
+                                appointControler.selectedTime.value ==
                                         time
                                     ? Colors.blue
                                     : Colors.grey,
@@ -71,19 +72,19 @@ class AppointmentPage extends StatelessWidget {
             ),
             Obx(
               () => Text(
-                  'Kunder Name: ${AppointmentController.to.selectedTime.value}'),
+                  'Kunder Name: ${appointControler.selectedTime.value}'),
             ),
             Obx(
               () => Text(
-                  'Service: ${AppointmentController.to.selectedTime.value}'),
+                  'Service: ${appointControler.selectedTime.value}'),
             ),
             Obx(
               () =>
-                  Text('Datum: ${AppointmentController.to.selectedDay.value}'),
+                  Text('Datum: ${appointControler.selectedDay.value}'),
             ),
             Obx(
               () => Text(
-                  'Uhrzeit: ${AppointmentController.to.selectedTime.value}'),
+                  'Uhrzeit: ${appointControler.selectedTime.value}'),
             ),
             SizedBox(height: 20),
             ElevatedButton(

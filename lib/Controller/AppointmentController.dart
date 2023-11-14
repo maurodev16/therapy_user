@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class AppointmentController extends GetxController {
-  static AppointmentController get to => Get.find();
+
 // final MyRepository repository;
 // AppointmentController(this.repository);
 

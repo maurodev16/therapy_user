@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../Models/BillsModel.dart';
 
 class BillsController extends GetxController {
-  static BillsController get to => Get.find();
   late final List<BillModel> pendingBills;
   @override
   void onInit() async {

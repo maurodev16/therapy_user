@@ -7,7 +7,7 @@ import '../pages/HomePage.dart';
 import '../pages/SettingsPage.dart';
 
 class BottomNavigationController extends GetxController {
-  static BottomNavigationController  get to  => Get.find();
+
   var currentIndex = 0.obs;
 
    List<Widget> pages = [

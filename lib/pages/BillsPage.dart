@@ -6,6 +6,8 @@ import '../Models/BillsModel.dart';
 import '../Utils/Colors.dart';
 
 class BillsPage extends StatelessWidget {
+  final billsControler = Get.find<BillsController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +87,9 @@ class BillsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<BillModel> bills = BillsController.to.getBillsByStatus(status);
+  final billsControler = Get.find<BillsController>();
+
+    List<BillModel> bills = billsControler.getBillsByStatus(status);
 
     return ListView.builder(
       itemCount: bills.length,
