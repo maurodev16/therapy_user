@@ -14,9 +14,46 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   RxBool isLoggedIn = false.obs;
   RxBool isLoadingLogin = false.obs;
   RxBool isPasswordVisible = false.obs;
+  @override
+  void onInit() {
+    super.onInit();
+    // Verifique se há um usuário autenticado no armazenamento local
+
+    final storedUserToken = storage.read<String>('token');
+    if (storedUserToken != null) {
+      isLoggedIn.value = true;
+      // Carregue os dados do usuário a partir do armazenamento local
+      _userData = UserModel(
+        token: storedUserToken,
+        userId: storage.read<String>('userId') ?? '',
+        clientNumber: storage.read<int>('clientNumber'),
+        clientNumberOrEmail: storage.read<int>('clientNumberOrEmail'),
+        firstname: storage.read<String>('firstName') ?? '',
+        lastname: storage.read<String>('lastname') ?? '',
+        email: storage.read<String>('email') ?? '',
+        userType: storage.read<String>('userType') ?? '',
+      ).obs;
+    } else {
+      // Se não houver usuário autenticado, inicialize _userData como um Rx<UserModel> vazio
+      _userData = Rx<UserModel>(UserModel());
+    }
+
+    print("AUTH MODEL DATA:::::::::::::::::: ${_userData.value}");
+
+    print("STORAGE ID:::${storage.read('userId')}");
+    print("STORAGE clientNumber:::${storage.read('clientNumber')}");
+    print(
+        "STORAGE clientNumberOrEmail:::${storage.read('clientNumberOrEmail')}");
+    print("STORAGE FIRSTNAME:::${storage.read('firstName')}");
+    print("STORAGE LASTNAME:::${storage.read('lastname')}");
+    print("STORAGE EMAIL:::${storage.read('email')}");
+    print("STORAGE TOKEN:::${storage.read('token')}");
+    print("STORAGE userType:::${storage.read('userType')}");
+  }
 
   RxString? userId;
-  RxInt? clientNumber;
+   RxInt? clientNumber;
+  dynamic clientNumberOrEmail;
   RxString? firstName = ''.obs;
   RxString? lastname = ''.obs;
   RxString? email = ''.obs;
@@ -37,41 +74,6 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   Rx<UserModel> get getUserData => this._userData;
   set setAuthData(Rx<UserModel> userData) => this._userData = userData;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Verifique se há um usuário autenticado no armazenamento local
-
-    final storedUserToken = storage.read<String>('token');
-    if (storedUserToken != null) {
-      isLoggedIn.value = true;
-      // Carregue os dados do usuário a partir do armazenamento local
-      _userData = UserModel(
-        token: storedUserToken,
-        userId: storage.read<String>('userId') ?? '',
-        clientNumber: storage.read<int>('clientNumber'),
-        firstname: storage.read<String>('firstName') ?? '',
-        lastname: storage.read<String>('lastname') ?? '',
-        email: storage.read<String>('email') ?? '',
-        userType: storage.read<String>('client') ?? '',
-      ).obs;
-    } else {
-      // Se não houver usuário autenticado, inicialize _userData como um Rx<UserModel> vazio
-      _userData = Rx<UserModel>(UserModel());
-    }
-
-    print("AUTH MODEL:::::::::::::::::: ${_userData.value}");
-    print("AUTH MODEL DATA:::::::::::::::::: ${_userData.value}");
-
-    print("STORAGE ID:::${storage.read('userId')}");
-    print("STORAGE clientNumber:::${storage.read('clientNumber')}");
-    print("STORAGE FIRSTNAME:::${storage.read('firstName')}");
-    print("STORAGE LASTNAME:::${storage.read('lastname')}");
-    print("STORAGE EMAIL:::${storage.read('email')}");
-    print("STORAGE TOKEN:::${storage.read('token')}");
-    print("STORAGE ROLE:::${storage.read('client')}");
-  }
-
   Future<void> login() async {
     if (isValid()) {
       isLoadingLogin.value = true;
@@ -86,6 +88,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           _userData.update((user) {
             user!.userId = response.userId;
             user.clientNumber = response.clientNumber;
+            user.clientNumberOrEmail = response.clientNumber?? response.email;
             user.firstname = response.firstname;
             user.lastname = response.lastname;
             user.email = response.email;
@@ -96,6 +99,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           // Armazena os dados do usuário no storage
           storage.write('userId', _userData.value.userId);
           storage.write('clientNumber', _userData.value.clientNumber);
+          storage.write('clientNumberOrEmail', _userData.value.clientNumberOrEmail);
           storage.write('firstname', _userData.value.firstname);
           storage.write('lastname', _userData.value.lastname);
           storage.write('email', _userData.value.email);
@@ -105,6 +109,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           // Atualiza as variáveis de estado com os dados do usuário autenticado
           userId!.value = _userData.value.userId!;
           clientNumber!.value = _userData.value.clientNumber!;
+          clientNumberOrEmail = _userData.value.clientNumber?? _userData.value.email;
           firstName!.value = _userData.value.firstname!;
           lastname!.value = _userData.value.lastname!;
           email!.value = _userData.value.email!;

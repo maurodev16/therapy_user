@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy_user/GlobalWidgets/loadingWidget.dart';
 import 'package:therapy_user/Utils/Colors.dart';
 
@@ -34,7 +35,7 @@ class CreateUserPage extends StatelessWidget {
                 SizedBox(height: 0.05 * Get.height),
                 //  Logo
                 //Image.asset(
-                          Hero(tag: "tagLogo", child:  FlutterLogo(size: 50)) ,
+                Hero(tag: "tagLogo", child: FlutterLogo(size: 50)),
 
                 // height: 100,
                 //  ),
@@ -52,11 +53,8 @@ class CreateUserPage extends StatelessWidget {
                         fillColor: branco,
                         errorText: controller.errorFirstName,
                         labelText: 'First name'.tr,
-                        labelStyle: TextStyle(
-                          fontFamily: "HelveticaNeue",
-                          fontWeight: FontWeight.w400,
-                          color: verde,
-                        ),
+                        labelStyle:
+                            GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           borderSide: BorderSide(
@@ -88,12 +86,65 @@ class CreateUserPage extends StatelessWidget {
                       ),
                       onChanged: (value) {
                         controller.firstname.value = value;
+                        print( controller.firstname.value);
                       },
                     ),
                   ),
                 ),
                 SizedBox(height: 0.03 * Get.height),
 
+                Container(
+                  width: 0.95 * Get.width,
+                  child: Obx(
+                    () => TextFormField(
+                      style: TextStyle(color: verde),
+                      enabled: !controller.isLoading.value,
+                      keyboardType: TextInputType.text,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        fillColor: branco,
+                        errorText: controller.errorLastName,
+                        labelText: 'Last name'.tr,
+                        labelStyle:
+                            GoogleFonts.lato(color: verde, fontSize: 16.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: verde,
+                            width: 1.0,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: preto,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: verde,
+                            width: 1,
+                          ),
+                        ),
+                        suffixIcon: controller.validateLastname
+                            ? Icon(Icons.check_circle_outline_rounded,
+                                color: verde)
+                            : null,
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                      ),
+                      onChanged: (value) {
+                        controller.lastname.value = value;
+                        print( controller.lastname.value);
+
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(height: 0.03 * Get.height),
                 ///
                 Container(
                   width: 0.95 * Get.width,
@@ -106,11 +157,8 @@ class CreateUserPage extends StatelessWidget {
                         fillColor: branco,
                         errorText: controller.errorEmail,
                         labelText: 'Email'.tr,
-                        labelStyle: TextStyle(
-                          fontFamily: "HelveticaNeue",
-                          fontWeight: FontWeight.w400,
-                          color: verde,
-                        ),
+                       labelStyle:
+                            GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           borderSide: BorderSide(
@@ -142,6 +190,8 @@ class CreateUserPage extends StatelessWidget {
                       ),
                       onChanged: (value) {
                         controller.email.value = value;
+                        print( controller.email.value);
+
                       },
                     ),
                   ),
@@ -171,11 +221,8 @@ class CreateUserPage extends StatelessWidget {
                                   color: verde),
                         ),
                         labelText: 'Password'.tr,
-                        labelStyle: TextStyle(
-                          fontFamily: "HelveticaNeue",
-                          fontWeight: FontWeight.w400,
-                          color: verde,
-                        ),
+                        labelStyle:  
+                            GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           borderSide: BorderSide(
@@ -203,6 +250,8 @@ class CreateUserPage extends StatelessWidget {
                       ),
                       onChanged: (value) {
                         controller.password.value = value;
+                        print( controller.password.value);
+
                       },
                     ),
                   ),
@@ -234,11 +283,8 @@ class CreateUserPage extends StatelessWidget {
                                 ),
                         ),
                         labelText: 'Confirm Password'.tr,
-                        labelStyle: TextStyle(
-                          fontFamily: "HelveticaNeue",
-                          fontWeight: FontWeight.w400,
-                          color: verde,
-                        ),
+                        labelStyle:
+                            GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           borderSide: BorderSide(
@@ -266,6 +312,8 @@ class CreateUserPage extends StatelessWidget {
                       ),
                       onChanged: (value) {
                         controller.confirmPassword.value = value;
+                          print( controller.confirmPassword.value);
+
                       },
                     ),
                   ),
@@ -320,10 +368,8 @@ class CreateUserPage extends StatelessWidget {
                               ? LoadingWidget()
                               : Text(
                                   'Register',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                  ),
+                                  style: GoogleFonts.lato(
+                                      color: branco, fontSize: 16.0),
                                 ),
                         ),
                       ),

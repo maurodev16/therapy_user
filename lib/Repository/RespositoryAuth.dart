@@ -12,7 +12,6 @@ class RepositoryAuth extends GetConnect implements IRepositoryAuth {
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['Authorization'] = 'Bearer';
       request.headers['Accept'] = 'application/json';
-
       return request;
     });
 
