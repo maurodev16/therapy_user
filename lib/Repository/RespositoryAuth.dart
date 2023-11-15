@@ -7,9 +7,8 @@ import '../Models/UserModel.dart';
 class RepositoryAuth extends GetConnect implements IRepositoryAuth {
   @override
   void onInit() async {
-    httpClient.baseUrl = dotenv.env['API_URL'];
+   // httpClient.baseUrl=dotenv.env['API_URL'];
     httpClient.timeout = Duration(seconds: 18);
-
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['Authorization'] = 'Bearer';
       request.headers['Accept'] = 'application/json';
@@ -23,7 +22,7 @@ class RepositoryAuth extends GetConnect implements IRepositoryAuth {
   Future<UserModel> login(String email, String password) async {
 try {
     final response = await httpClient
-        .post('auth/login', body: {'email': email, 'password': password});
+        .post('https://therapy-bv4t.onrender.com/api/v1/auth/login', body: {'email': email, 'password': password});
     print(response);
 
     if (response.status.isOk) {

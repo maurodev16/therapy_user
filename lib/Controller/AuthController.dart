@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:therapy_user/BottomNavigationBar/BottomNavigationBar.dart';
 import 'package:therapy_user/GlobalWidgets/loadingWidget.dart';
 import 'package:therapy_user/Utils/Colors.dart';
 
@@ -72,8 +73,8 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   RxString? confirmPassword = ''.obs;
 
   Future<void> login() async {
+    isLoadingLogin.value = true;
     if (isValid()) {
-      isLoadingLogin.value = true;
       try {
         UserModel response =
             await _iRepositoryAuth.login(email!.value, password!.value);
@@ -92,7 +93,16 @@ class AuthController extends GetxController with StateMixin<UserModel> {
             user.updatedAt = response.updatedAt;
           });
           print("TOKEN:::${response.token}");
-
+          print("GET USER DATA ::::::::::::$getUserData");
+          // Exibe uma mensagem de sucesso e navega para a página de container
+          isLoggedIn.value = true;
+          Fluttertoast.showToast(
+            msg: 'Success, you are logged-In',
+            backgroundColor: verde,
+          );
+          // Atualiza o estado com a resposta bem-sucedida
+          change(response, status: RxStatus.success());
+          Get.offAll(() => BottomNavigationWidget());
           // Armazena os dados do usuário no storage
           storage.write('userId', _userData.value.userId);
           storage.write('clientNumber', _userData.value.clientNumber);
@@ -110,22 +120,14 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           email!.value = _userData.value.email!;
           userType!.value = _userData.value.userType!;
           token!.value = _userData.value.token!;
-
-          print("GET USER DATA ::::::::::::$getUserData");
-          // Exibe uma mensagem de sucesso e navega para a página de container
-          isLoggedIn.value = true;
+        } else {
           Fluttertoast.showToast(
-            msg: 'Success, you are logged-In',
+            msg: 'Inalid, Field invalid',
             backgroundColor: verde,
           );
-          Get.offAllNamed('/home_page');
-
-          // Atualiza o estado com a resposta bem-sucedida
-          change(response, status: RxStatus.success());
         }
-      } catch  (error) {
+      } catch (error) {
         print(error.toString());
-        await handleLoginError(error);
       } finally {
         isLoadingLogin.value = false;
       }

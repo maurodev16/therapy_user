@@ -12,7 +12,9 @@ class LoginPage extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body:controller.isLoadingLogin.value
+                              ?Center(child:LoadingWidget() ,) 
+                              : SingleChildScrollView(
         child: Center(
           child: Form(
             key: _formKey,
@@ -299,9 +301,7 @@ class LoginPage extends GetView<AuthController> {
                         child: Container(
                           height: 50,
                           alignment: Alignment.center,
-                          child: controller.isLoadingLogin.value
-                              ? LoadingWidget()
-                              : Text(
+                          child:  Text(
                                   'Login',
                                   style: TextStyle(
                                     color: preto,

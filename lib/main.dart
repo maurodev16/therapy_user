@@ -19,7 +19,6 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   await GetStorage.init();
-
   runApp(MainApp());
 }
 
@@ -28,42 +27,44 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
-        final AuthController authController =
-            Get.put<AuthController>(AuthController(RepositoryAuth()));
-        return GetMaterialApp(
-          key: GlobalKey(),
-          initialBinding: MyBinding(),
-locale: Locale('de', 'DE'),
-          debugShowCheckedModeBanner: false,
-          defaultTransition: Transition.zoom,
-          // translations: TranslationService(),
-          //  locale: TranslationService.locale,
-          // fallbackLocale: TranslationService.fallbackLocale,
-          theme: Theme.of(context).copyWith(
-            appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                  systemOverlayStyle: SystemUiOverlayStyle(
-                    statusBarColor: verde,
-                    statusBarIconBrightness: Brightness.light,
-                    systemNavigationBarColor: verde,
-                    systemNavigationBarIconBrightness: Brightness.light,
-                  ),
+    final AuthController authController =
+        Get.put<AuthController>(AuthController(RepositoryAuth()));
+    return GetBuilder<AuthController>(builder: (_) {
+      return GetMaterialApp(
+        key: GlobalKey(),
+        initialBinding: MyBinding(),
+        locale: Locale('de', 'DE'),
+        debugShowCheckedModeBanner: false,
+        defaultTransition: Transition.zoom,
+        // translations: TranslationService(),
+        //  locale: TranslationService.locale,
+        // fallbackLocale: TranslationService.fallbackLocale,
+        theme: Theme.of(context).copyWith(
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: verde,
+                  statusBarIconBrightness: Brightness.light,
+                  systemNavigationBarColor: verde,
+                  systemNavigationBarIconBrightness: Brightness.light,
                 ),
+              ),
+        ),
+        home: UpgradeAlert(
+          upgrader: Upgrader(
+              // messages: MySpanishMessages(),
+              dialogStyle: GetPlatform.isAndroid
+                  ? UpgradeDialogStyle.material
+                  : UpgradeDialogStyle.cupertino),
+          child: Obx(
+            () {
+              return authController.isLoggedIn.value
+                  ? BottomNavigationWidget()
+                  : LoginPage();
+            },
           ),
-          home: UpgradeAlert(
-            upgrader: Upgrader(
-                // messages: MySpanishMessages(),
-                dialogStyle: GetPlatform.isAndroid
-                    ? UpgradeDialogStyle.material
-                    : UpgradeDialogStyle.cupertino),
-            child: authController.isLoggedIn.value
-                ? BottomNavigationWidget()
-                : LoginPage(),
-          ),
-          getPages: AppRoutes.pages,
-        );
-      },
-    );
+        ),
+        getPages: AppRoutes.pages,
+      );
+    });
   }
 }
