@@ -5,7 +5,6 @@ class UserModel {
   String? lastname;
   String? email;
   String? password;
-  dynamic clientNumberOrEmail;
   String? token;
   String? userType;
   DateTime? createdAt;
@@ -19,7 +18,6 @@ class UserModel {
     this.token,
     this.userType,
     this.password,
-    this.clientNumberOrEmail,
     this.createdAt,
     this.updatedAt,
   });
@@ -32,7 +30,6 @@ class UserModel {
       lastname: json['last_name'],
       email: json['email'],
       password: json['password'],
-      clientNumberOrEmail: json['clientNumberOrEmail'],
       token: json['token'],
       userType: json['user_type'] = 'client',
       createdAt: DateTime.parse(json['createdAt']),
@@ -48,7 +45,6 @@ class UserModel {
       'last_name': lastname,
       'email': email,
       'password': password,
-      'clientNumberOrEmail': clientNumberOrEmail,
       'token': token,
       'user_type': userType,
       'createdAt': createdAt,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:therapy_user/pages/ProfilePage.dart';
 
-import '../pages/AppointmentPage.dart';
 import '../pages/BillsPage.dart';
 import '../pages/HomePage.dart';
 import '../pages/SettingsPage.dart';
@@ -13,7 +13,7 @@ class BottomNavigationController extends GetxController {
    List<Widget> pages = [
     HomePage(),
     BillsPage(),
-    AppointmentPage(),
+    ProfilePage(),
     SettingsPage(),
   ].obs;
 

@@ -11,6 +11,19 @@ import '../Models/UserModel.dart';
 class AuthController extends GetxController with StateMixin<UserModel> {
   final IRepositoryAuth _iRepositoryAuth;
   AuthController(this._iRepositoryAuth);
+
+  ///STORAGE
+  final storage = GetStorage();
+
+  bool isCurrentUser(UserModel userModel) {
+    String? currentUserId = storage.read<String>('userId');
+    return userModel.userId == currentUserId;
+  }
+
+  late final Rx<UserModel> _userData;
+  Rx<UserModel> get getUserData => this._userData;
+  set setAuthData(Rx<UserModel> userData) => this._userData = userData;
+
   RxBool isLoggedIn = false.obs;
   RxBool isLoadingLogin = false.obs;
   RxBool isPasswordVisible = false.obs;
@@ -27,8 +40,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
         token: storedUserToken,
         userId: storage.read<String>('userId') ?? '',
         clientNumber: storage.read<int>('clientNumber'),
-        clientNumberOrEmail: storage.read<int>('clientNumberOrEmail'),
-        firstname: storage.read<String>('firstName') ?? '',
+        firstname: storage.read<String>('firstname') ?? '',
         lastname: storage.read<String>('lastname') ?? '',
         email: storage.read<String>('email') ?? '',
         userType: storage.read<String>('userType') ?? '',
@@ -42,9 +54,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
 
     print("STORAGE ID:::${storage.read('userId')}");
     print("STORAGE clientNumber:::${storage.read('clientNumber')}");
-    print(
-        "STORAGE clientNumberOrEmail:::${storage.read('clientNumberOrEmail')}");
-    print("STORAGE FIRSTNAME:::${storage.read('firstName')}");
+    print("STORAGE FIRSTNAME:::${storage.read('firstname')}");
     print("STORAGE LASTNAME:::${storage.read('lastname')}");
     print("STORAGE EMAIL:::${storage.read('email')}");
     print("STORAGE TOKEN:::${storage.read('token')}");
@@ -52,9 +62,8 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   }
 
   RxString? userId;
-   RxInt? clientNumber;
-  dynamic clientNumberOrEmail;
-  RxString? firstName = ''.obs;
+  RxInt? clientNumber = 0.obs;
+  RxString? firstname = ''.obs;
   RxString? lastname = ''.obs;
   RxString? email = ''.obs;
   RxString? token = ''.obs;
@@ -62,44 +71,31 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   RxString? password = ''.obs;
   RxString? confirmPassword = ''.obs;
 
-  ///STORAGE
-  final storage = GetStorage();
-
-  bool isCurrentUser(UserModel userModel) {
-    String? currentUserId = storage.read<String>('userId');
-    return userModel.userId == currentUserId;
-  }
-
-  late final Rx<UserModel> _userData;
-  Rx<UserModel> get getUserData => this._userData;
-  set setAuthData(Rx<UserModel> userData) => this._userData = userData;
-
   Future<void> login() async {
     if (isValid()) {
       isLoadingLogin.value = true;
       try {
-        UserModel response = await _iRepositoryAuth.login(
-          email!.value,
-          clientNumber!.value,
-          password!.value,
-        );
+        UserModel response =
+            await _iRepositoryAuth.login(email!.value, password!.value);
+        print("response:::${response.token}");
 
         if (response.token!.isNotEmpty) {
           _userData.update((user) {
             user!.userId = response.userId;
             user.clientNumber = response.clientNumber;
-            user.clientNumberOrEmail = response.clientNumber?? response.email;
             user.firstname = response.firstname;
             user.lastname = response.lastname;
             user.email = response.email;
             user.userType = response.userType;
             user.token = response.token;
+            user.createdAt = response.createdAt;
+            user.updatedAt = response.updatedAt;
           });
+          print("TOKEN:::${response.token}");
 
           // Armazena os dados do usuário no storage
           storage.write('userId', _userData.value.userId);
           storage.write('clientNumber', _userData.value.clientNumber);
-          storage.write('clientNumberOrEmail', _userData.value.clientNumberOrEmail);
           storage.write('firstname', _userData.value.firstname);
           storage.write('lastname', _userData.value.lastname);
           storage.write('email', _userData.value.email);
@@ -109,8 +105,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           // Atualiza as variáveis de estado com os dados do usuário autenticado
           userId!.value = _userData.value.userId!;
           clientNumber!.value = _userData.value.clientNumber!;
-          clientNumberOrEmail = _userData.value.clientNumber?? _userData.value.email;
-          firstName!.value = _userData.value.firstname!;
+          firstname!.value = _userData.value.firstname!;
           lastname!.value = _userData.value.lastname!;
           email!.value = _userData.value.email!;
           userType!.value = _userData.value.userType!;
@@ -128,8 +123,9 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           // Atualiza o estado com a resposta bem-sucedida
           change(response, status: RxStatus.success());
         }
-      } catch (error) {
-        handleLoginError(error);
+      } catch  (error) {
+        print(error.toString());
+        await handleLoginError(error);
       } finally {
         isLoadingLogin.value = false;
       }
@@ -137,9 +133,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     update();
   }
 
-  void showSuccessMessageAndNavigate() {}
-
-  void handleLoginError(error) {
+  Future<void> handleLoginError(error) async {
     String errorMessage;
     if (error.toString().contains("No User found with this email!")) {
       errorMessage = "No User found with this email!";
@@ -161,7 +155,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
 // Método para atualizar o estado e notificar o GetX
   void updateFormState() {
     password!.refresh();
-    firstName!.refresh();
+    firstname!.refresh();
     lastname!.refresh();
     confirmPassword!.refresh();
     email!.refresh();
@@ -169,7 +163,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   }
 
   void cleanInputs() {
-    firstName!.value = '';
+    firstname!.value = '';
     lastname!.value = '';
     userType!.value = '';
     email!.value = '';
@@ -212,38 +206,6 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   }
 
   ///
-  bool get validateFirstname =>
-      firstName!.trim().isNotEmpty &&
-      firstName!.value.length <= 90 &&
-      firstName!.value.length > 1;
-  String? get errorFirstname {
-    if (validateFirstname)
-      return null;
-    else if (firstName!.value.isEmpty) {
-      return null;
-    } else if (firstName!.value.length < 2) {
-      return "First Name is to short!";
-    }
-    return "First Name is to long!";
-  }
-
-  ///
-  bool get validateLastname =>
-      lastname!.trim().isNotEmpty &&
-      lastname!.value.length <= 90 &&
-      lastname!.value.length > 1;
-  String? get errorLastname {
-    if (validateLastname)
-      return null;
-    else if (lastname!.value.isEmpty) {
-      return null;
-    } else if (lastname!.value.length < 2) {
-      return "Last name is to short!";
-    }
-    return "Last name is to long!";
-  }
-
-  ///
   bool get validatePassword =>
       password!.value.trim().isNotEmpty && password!.value.length >= 7;
   String? get errorPassword {
@@ -267,19 +229,10 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   bool get validateConfPassword => confirmPassword!.value == password!.value;
   bool isValid() {
     update();
-    if (!validateFirstname) {
-      return false;
-    }
-    if (!validateLastname) {
-      return false;
-    }
     if (!validateEmail) {
       return false;
     }
     if (!validatePassword) {
-      return false;
-    }
-    if (!validateConfPassword) {
       return false;
     }
     return true;

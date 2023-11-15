@@ -7,7 +7,7 @@ import '../Models/UserModel.dart';
 class RepositoryUser extends GetConnect implements IRepositoryUser {
   @override
   void onInit() async {
-   /// httpClient.baseUrl = dotenv.env['API_URL'];
+    httpClient.baseUrl = dotenv.env['API_URL'];
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['Authorization'] = 'Bearer';
       request.headers['Accept'] = 'application/json';
@@ -20,9 +20,9 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
 
   @override
   Future<UserModel> create(UserModel userModel) async {
-   // try {
+    try {
       final response =
-          await httpClient.post('http://192.168.178.24:3001/api/v1/user/create', body: userModel.toJson());
+          await httpClient.post('user/create', body: userModel.toJson());
 
       if (response.status.isOk) {
         final Map<String, dynamic> responseData = await response.body;
@@ -39,10 +39,10 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
         print("Signup error: ${response.statusText}");
         return throw Exception(response.body);
       }
-    // } catch (e) {
-    //   print("Login error: $e");
-    //   throw Exception('An error occurred during Signup: $e');
-    // }
+    } catch (e) {
+      print("Login error: $e");
+      throw Exception('An error occurred during Signup: $e');
+    }
   }
 
   @override

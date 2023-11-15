@@ -19,7 +19,7 @@ class BottomNavigationWidget extends GetView<BottomNavigationController> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.home,
+                  Icons.home_outlined,
                 ),
                 label: 'Home',
               ),
@@ -27,23 +27,23 @@ class BottomNavigationWidget extends GetView<BottomNavigationController> {
                 icon: Stack(
                   children: [
                     Icon(
-                      Icons.archive_outlined,
+                      Icons.attach_email_outlined,
                     ),
                   ],
                 ),
-                label: 'Bills',
+                label: 'Rechnungen',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
-                  Icons.calendar_month,
+                  Icons.person_2_outlined,
                 ),
-                label: 'Appointment',
+                label: 'Termin',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.settings,
                 ),
-                label: 'Settings',
+                label: 'Einstellungen',
               ),
             ],
             selectedItemColor: azul,

@@ -6,7 +6,6 @@ import 'package:therapy_user/Utils/Colors.dart';
 
 import '../../../Controller/AuthController.dart';
 
-
 class LoginPage extends GetView<AuthController> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -21,7 +20,7 @@ class LoginPage extends GetView<AuthController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: Get.height * 0.2),
-                 Hero(tag: "tagLogo", child:  FlutterLogo(size: 50)) ,
+                Hero(tag: "tagLogo", child: FlutterLogo(size: 50)),
                 SizedBox(height: Get.height * 0.1),
 
                 Container(
@@ -29,14 +28,12 @@ class LoginPage extends GetView<AuthController> {
                   child: Obx(
                     () => TextFormField(
                       style: TextStyle(color: verde),
-                      enabled:
-                          !controller.isLoadingLogin.value,
+                      enabled: !controller.isLoadingLogin.value,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         fillColor: branco,
-                        errorText:
-                            controller.errorEmail,
-                        labelText: 'Client Number Or Email'.tr,
+                        errorText: controller.errorEmail,
+                        labelText: 'Email'.tr,
                         labelStyle: TextStyle(
                           fontFamily: "HelveticaNeue",
                           fontWeight: FontWeight.w400,
@@ -63,18 +60,17 @@ class LoginPage extends GetView<AuthController> {
                             width: 1,
                           ),
                         ),
-                        suffixIcon:
-                            controller.validateEmail
-                                ? Icon(Icons.mark_email_read_outlined,
-                                    size: 20, color: vermelho)
-                                : Icon(Icons.email_outlined,
-                                    size: 20, color: vermelho),
+                        suffixIcon: controller.validateEmail
+                            ? Icon(Icons.mark_email_read_outlined,
+                                size: 20, color: vermelho)
+                            : Icon(Icons.email_outlined,
+                                size: 20, color: vermelho),
                         filled: true,
                         contentPadding: EdgeInsets.symmetric(
                             vertical: 16.0, horizontal: 16.0),
                       ),
                       onChanged: (value) {
-                        controller.email!.value = value;//clientNumberOrEmail
+                        controller.email!.value = value; //clientNumberOrEmail
                       },
                     ),
                   ),
@@ -85,18 +81,16 @@ class LoginPage extends GetView<AuthController> {
                   child: Obx(
                     () => TextFormField(
                       style: TextStyle(color: verde),
-                      enabled:
-                          !controller.isLoadingLogin.value,
+                      enabled: !controller.isLoadingLogin.value,
                       obscureText: !controller.isPasswordVisible.value,
                       decoration: InputDecoration(
                         fillColor: branco,
-                        errorText:
-                            controller.errorPassword,
+                        errorText: controller.errorPassword,
                         suffixIcon: IconButton(
                           onPressed: () {
-                          controller.togglePasswordVisibility();
+                            controller.togglePasswordVisibility();
                           },
-                          icon:controller.isPasswordVisible.value
+                          icon: controller.isPasswordVisible.value
                               ? Icon(
                                   Icons.visibility_outlined,
                                   size: 20,
@@ -195,8 +189,8 @@ class LoginPage extends GetView<AuthController> {
                                           width: 0.95 * Get.width,
                                           child: Obx(
                                             () => TextFormField(
-                                              enabled:
-                                                  !controller.isLoadingLogin.value,
+                                              enabled: !controller
+                                                  .isLoadingLogin.value,
                                               keyboardType:
                                                   TextInputType.emailAddress,
                                               decoration: InputDecoration(
@@ -238,12 +232,12 @@ class LoginPage extends GetView<AuthController> {
                                                     width: 1,
                                                   ),
                                                 ),
-                                                suffixIcon:
-                                                    controller.validateEmail
-                                                        ? Icon(Icons
-                                                            .mark_email_read_outlined)
-                                                        : Icon(Icons
-                                                            .email_outlined),
+                                                suffixIcon: controller
+                                                        .validateEmail
+                                                    ? Icon(Icons
+                                                        .mark_email_read_outlined)
+                                                    : Icon(
+                                                        Icons.email_outlined),
                                                 filled: true,
                                                 contentPadding:
                                                     EdgeInsets.symmetric(
@@ -281,13 +275,12 @@ class LoginPage extends GetView<AuthController> {
                   () => SizedBox(
                     width: 0.95 * Get.width,
                     child: ElevatedButton(
-                      onPressed:
-                          controller.loginButtonEnabled!
-                              ? ()  {
-                                   controller.login();
-                                }
-                              : null,
-                              style: ElevatedButton.styleFrom(
+                      onPressed: controller.loginButtonEnabled!
+                          ? () async {
+                              await controller.login();
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25.0),
                         ),
@@ -306,7 +299,7 @@ class LoginPage extends GetView<AuthController> {
                         child: Container(
                           height: 50,
                           alignment: Alignment.center,
-                          child:    controller.isLoadingLogin.value
+                          child: controller.isLoadingLogin.value
                               ? LoadingWidget()
                               : Text(
                                   'Login',
@@ -317,8 +310,6 @@ class LoginPage extends GetView<AuthController> {
                                 ),
                         ),
                       ),
-                     
-                     
                     ),
                   ),
                 ),

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:therapy_user/Utils/Colors.dart';
 
 import '../Controller/AppointmentController.dart';
 
 class AppointmentPage extends StatelessWidget {
   final appointControler = Get.find<AppointmentController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,19 +26,34 @@ class AppointmentPage extends StatelessWidget {
             ),
             // Monatskalender
             TableCalendar(
+              //  locale: "de_DE",
+              rowHeight: 35,
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+              ),
               focusedDay: DateTime
                   .now(), // Datum, das der Kalender zuerst anzeigen soll
-              firstDay: DateTime(DateTime.now().year, DateTime.now().month - 1,
+              firstDay: DateTime(DateTime.now().year, DateTime.now().month,
                   DateTime.now().day), // Erster sichtbarer Tag im Kalender
-              lastDay: DateTime(DateTime.now().year, DateTime.now().month + 1,
+              lastDay: DateTime(DateTime.now().year, DateTime.now().month + 6,
                   DateTime.now().day), // Letzter sichtbarer Tag im Kalender
               selectedDayPredicate: (day) {
+                isSameDay(day, DateTime.now());
                 // Überprüfen, ob der Tag gebucht ist und deaktivieren
                 return appointControler.bookedDates.contains(day);
               },
+              availableGestures: AvailableGestures.all,
               onDaySelected: (selectedDay, focusedDay) {
                 appointControler.selectedDay.value =
                     selectedDay.toLocal().toString().split(' ')[0];
+                Fluttertoast.showToast(
+                    msg:"Ausgewählter Tag: ${ appointControler.selectedDay.value}",
+                    gravity: ToastGravity.TOP,
+                    toastLength: Toast.LENGTH_LONG,
+                    backgroundColor: verde,
+
+                    );
               },
             ),
 
@@ -52,11 +70,17 @@ class AppointmentPage extends StatelessWidget {
                     .map((time) => ElevatedButton(
                           onPressed: () {
                             appointControler.selectedTime.value = time;
+                               Fluttertoast.showToast(
+                    msg:"Ausgewählte Zeit: ${ appointControler.selectedTime.value}",
+                    gravity: ToastGravity.TOP,
+                    toastLength: Toast.LENGTH_LONG,
+                    backgroundColor: verde,
+
+                    );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                appointControler.selectedTime.value ==
-                                        time
+                                appointControler.selectedTime.value == time
                                     ? Colors.blue
                                     : Colors.grey,
                           ),
@@ -71,21 +95,18 @@ class AppointmentPage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Obx(
-              () => Text(
-                  'Kunder Name: ${appointControler.selectedTime.value}'),
+              () => Text('Kunder Name: ${appointControler.selectedTime.value}'),
             ),
             Obx(
-              () => Text(
-                  'Service: ${appointControler.selectedTime.value}'),
+              () => Text('Service: ${appointControler.selectedTime.value}'),
             ),
             Obx(
-              () =>
-                  Text('Datum: ${appointControler.selectedDay.value}'),
+              () => Text('Datum: ${appointControler.selectedDay.value}'),
             ),
             Obx(
-              () => Text(
-                  'Uhrzeit: ${appointControler.selectedTime.value}'),
+              () => Text('Uhrzeit: ${appointControler.selectedTime.value}'),
             ),
+
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {

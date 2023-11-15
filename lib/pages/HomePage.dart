@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy_user/pages/AppointmentPage.dart';
 import '../Utils/Colors.dart';
 
@@ -25,8 +26,8 @@ Widget appointmentsScreen() {
     child: Scaffold(
       appBar: AppBar(
         title: Text(
-          'Zeitpläne',
-          style: TextStyle(fontSize: 15),
+          'Mein Zeitpläne',
+          style: GoogleFonts.lato(fontSize: 15),
         ),
         actions: [
           Row(

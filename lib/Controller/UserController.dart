@@ -33,8 +33,6 @@ class UserController extends GetxController with StateMixin<UserModel> {
     print("STORAGE userType:::${storage.read('userType')}");
     print("STORAGE EMAIL:::${storage.read('email')}");
     print("STORAGE clientNumber:::${storage.read<int>('clientNumber')}");
-    print(
-        "STORAGE clientNumberOrEmail:::${storage.read('clientNumberOrEmail')}");
   }
 
   RxString userId = ''.obs;

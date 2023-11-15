@@ -5,7 +5,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Settings Page - TO DO'),
+      child: Image.asset("assets/images/under-construction.png"),
     );
   }
 }
