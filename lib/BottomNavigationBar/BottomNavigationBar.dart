@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../Controller/BottomNavigationController.dart';
 import '../Utils/Colors.dart';
+import '../pages/AppointmentPage.dart';
 
 class BottomNavigationWidget extends GetView<BottomNavigationController> {
   @override
@@ -10,6 +11,13 @@ class BottomNavigationWidget extends GetView<BottomNavigationController> {
     return Obx(
       () {
         return Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Get.to(() => AppointmentPage());
+            },
+            heroTag: "tgCalender",
+            child: Icon(Icons.calendar_month),
+          ),
           body: controller.pages[controller.currentIndex.value],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: controller.currentIndex.value,
@@ -37,7 +45,7 @@ class BottomNavigationWidget extends GetView<BottomNavigationController> {
                 icon: Icon(
                   Icons.person_2_outlined,
                 ),
-                label: 'Termin',
+                label: 'Profil',
               ),
               BottomNavigationBarItem(
                 icon: Icon(

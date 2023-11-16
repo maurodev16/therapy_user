@@ -8,10 +8,12 @@ class RepositoryAuth extends GetConnect implements IRepositoryAuth {
   @override
   void onInit() async {
    // httpClient.baseUrl=dotenv.env['API_URL'];
-    httpClient.timeout = Duration(seconds: 18);
+   
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['Authorization'] = 'Bearer';
       request.headers['Accept'] = 'application/json';
+    httpClient.timeout = Duration(seconds: 18);
+
       return request;
     });
 

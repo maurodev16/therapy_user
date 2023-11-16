@@ -12,6 +12,8 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
       request.headers['Authorization'] = 'Bearer';
       request.headers['Accept'] = 'application/json';
       defaultContentType="application/json; charset=utf-8";
+    httpClient.timeout = Duration(seconds: 18);
+
       return request;
     });
 

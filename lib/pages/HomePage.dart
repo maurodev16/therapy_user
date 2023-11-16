@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:therapy_user/pages/AppointmentPage.dart';
 import '../Utils/Colors.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,13 +7,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: appointmentsScreen(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(()=>AppointmentPage());
-        },
-        heroTag: "tgCalender",
-        child: Icon(Icons.calendar_month),
-      ),
+    
     );
   }
 }

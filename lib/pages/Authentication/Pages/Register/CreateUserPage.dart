@@ -35,7 +35,7 @@ class CreateUserPage extends StatelessWidget {
                 SizedBox(height: 0.05 * Get.height),
                 //  Logo
                 //Image.asset(
-                Hero(tag: "tagLogo", child: FlutterLogo(size: 50)),
+                Hero(tag: "tagLogo", child: Text("[LOGO]")),
 
                 // height: 100,
                 //  ),
@@ -52,7 +52,7 @@ class CreateUserPage extends StatelessWidget {
                       decoration: InputDecoration(
                         fillColor: branco,
                         errorText: controller.errorFirstName,
-                        labelText: 'First name'.tr,
+                        labelText: 'Vorname'.tr,
                         labelStyle:
                             GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
@@ -104,7 +104,7 @@ class CreateUserPage extends StatelessWidget {
                       decoration: InputDecoration(
                         fillColor: branco,
                         errorText: controller.errorLastName,
-                        labelText: 'Last name'.tr,
+                        labelText: 'Nachname'.tr,
                         labelStyle:
                             GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
@@ -220,7 +220,7 @@ class CreateUserPage extends StatelessWidget {
                               : Icon(Icons.visibility_off_outlined,
                                   color: verde),
                         ),
-                        labelText: 'Password'.tr,
+                        labelText: 'Passwort'.tr,
                         labelStyle:  
                             GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
@@ -282,7 +282,7 @@ class CreateUserPage extends StatelessWidget {
                                   color: verde,
                                 ),
                         ),
-                        labelText: 'Confirm Password'.tr,
+                        labelText: 'Bestätige das Passwort'.tr,
                         labelStyle:
                             GoogleFonts.lato(color: verde, fontSize: 16.0),
                         border: OutlineInputBorder(
@@ -333,12 +333,12 @@ class CreateUserPage extends StatelessWidget {
                                       value.userId != null) {
                                     Fluttertoast.showToast(
                                         msg:
-                                            "Hello ${value.firstname} ${value.lastname}, welcome to our app."
+                                            "Hallo ${value.firstname} ${value.lastname}, willkommen in unserer App."
                                                 .tr);
                                     Get.toNamed('/login_page');
                                   } else {
                                     Fluttertoast.showToast(
-                                        msg: "An error is sended.".tr);
+                                        msg: "Es wird ein Fehler gesendet.".tr);
                                     Get.toNamed('/create_user_page');
                                   }
                                 },
@@ -367,7 +367,7 @@ class CreateUserPage extends StatelessWidget {
                           child: controller.isLoading.value
                               ? LoadingWidget()
                               : Text(
-                                  'Register',
+                                  'Registrieren',
                                   style: GoogleFonts.lato(
                                       color: branco, fontSize: 16.0),
                                 ),
