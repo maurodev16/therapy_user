@@ -3,20 +3,23 @@ import 'package:get/get.dart';
 
 import '../IRepository/IRepositoryAuth.dart';
 import '../Models/UserModel.dart';
+import '../Utils/const_storage_keys.dart';
 
 class RepositoryAuth extends GetConnect implements IRepositoryAuth {
   @override
   void onInit() async {
-   // httpClient.baseUrl=dotenv.env['API_URL'];
-   
+   // httpClient.baseUrl = dotenv.env['API_URL'];
+     final accessToken = StorageKeys.storagedToken;  
+     
     httpClient.addRequestModifier<dynamic>((request) {
-      request.headers['Authorization'] = 'Bearer';
+      httpClient.timeout = Duration(seconds: 18);
+      request.headers['Authorization'] = 'Bearer $accessToken';
       request.headers['Accept'] = 'application/json';
-    httpClient.timeout = Duration(seconds: 18);
+      defaultContentType = "application/json; charset=utf-8";
+    
 
       return request;
     });
-
     super.onInit();
   }
 
@@ -30,7 +33,7 @@ try {
     if (response.status.isOk) {
       Map<String, dynamic> responseData = await response.body;
       print("LoogedIn: $responseData");
-      return UserModel.fromJson(responseData);
+      return  UserModel.fromJson(responseData);
     } else {
       return throw Exception(response.statusText);
     }

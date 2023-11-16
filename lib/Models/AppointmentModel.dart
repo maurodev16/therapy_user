@@ -32,8 +32,12 @@ class AppointmentModel {
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
     return AppointmentModel(
       id: json['_id'],
-      date: DateTime.parse(json['date']),
-      time: DateTime.parse(json['time']),
+      date:json['date'] != null
+          ? DateTime.parse(json['date'])
+          : null,
+          time:json['time'] != null
+          ? DateTime.parse(json['time'])
+          : null,
       notes: json['notes'],
       userModel: UserModel.fromJson(json['user_obj']),
       serviceTypeModel: 

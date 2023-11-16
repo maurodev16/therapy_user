@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:therapy_user/IRepository/IRepositoryAppointment.dart';
@@ -58,30 +59,45 @@ class AppointmentController extends GetxController
   Rx<DateTime>? updatedAt;
   RxBool isLoading = false.obs;
   RxString appointStatus = 'open'.obs;
- late AppointmentModel appointmentData;
+  late AppointmentModel appointmentData;
 
   Future<AppointmentModel?> create() async {
-   
-    appointmentData = AppointmentModel(
+    isLoading.value = true;
+    try {
+      appointmentData = AppointmentModel(
         date: selectedData.value,
         time: selectedTime.value,
         notes: notes.value,
         userModel: authController.getUserData.value,
-       status:  appointStatus.value,
+        status: appointStatus.value,
       );
-      AppointmentModel response =
-          await _irepository.create(appointmentData);
+      AppointmentModel response = await _irepository.create(appointmentData);
       if (response.id != null) {
-        
         print("TOKEN:::${response.id}");
         print("GET USER DATA ::::::::::::$response");
         // Atualiza o estado com a resposta bem-sucedida
         change(response, status: RxStatus.success());
-
         return response;
       }
-    
+    } catch (e) {
+      print(e.toString());
+      handleLoginError(e.toString());
+    }finally{
+      isLoading.value = false;
+    }
     update();
     return appointmentData;
+  }
+    Future<void> handleLoginError(error) async {
+    String errorMessage;
+    if (error.toString().contains("DATA_END_TIME_NOT_AVAIABLE")) {
+      errorMessage = "Datum und Uhrzeit nicht verfügbar!";
+    } else if (error.toString().contains("ERROR_CREATE_APPOINT")) {
+      errorMessage = "Fehler bei der Terminvereinbarung";
+    }  else {
+      errorMessage = "Ein unbekannter Fehler ist aufgetreten";
+    }
+    Fluttertoast.showToast(msg: errorMessage);
+    change(null, status: RxStatus.error(errorMessage));
   }
 }
