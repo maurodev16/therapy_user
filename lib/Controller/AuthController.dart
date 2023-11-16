@@ -128,7 +128,6 @@ class AuthController extends GetxController with StateMixin<UserModel> {
         }
       } catch (error) {
         print(error.toString());
-        
       } finally {
         isLoadingLogin.value = false;
       }

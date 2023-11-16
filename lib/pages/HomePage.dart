@@ -1,116 +1,134 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'package:therapy_user/Controller/AppointmentController.dart';
+import 'package:therapy_user/Models/AppointmentModel.dart';
+
+
+
 import '../Utils/Colors.dart';
 
 class HomePage extends StatelessWidget {
+  final appointControler = Get.find<AppointmentController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: appointmentsScreen(),
-    
+      appBar: AppBar(
+        title: Text(
+          'Mein Zeitpläne',
+          style: TextStyle(fontSize: 15),
+        ),
+      ),
+      body: DefaultTabController(
+        length: 3,
+        child: Column(
+          children: [
+            Container(
+              constraints: BoxConstraints.expand(height: Get.height * 0.1),
+              child: TabBar(
+                tabs: [
+                  Tab(text: 'Aktual Termin'),
+                  Tab(text: 'Geschlossen'),
+                  Tab(text: 'Abgesagt'),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  // Content of "Open" tab
+                  AppointmentsList(status: 'Open'),
+
+                  // Content of "Closed" tab
+                  AppointmentsList(status: 'Closed'),
+
+                  // Content of "Pending" tab
+                  AppointmentsList(status: 'Reversal'),
+
+                 
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-Widget appointmentsScreen() {
-  return DefaultTabController(
-    length: 3, // Define o número de abas
-    child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Mein Zeitpläne',
-          style: GoogleFonts.lato(fontSize: 15),
-        ),
-        actions: [
-          Row(
-            children: [],
-          ),
+class AppointmentsList extends StatelessWidget {
+  final String status;
 
-          ///NOTIFICATION ICON
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications,
+  AppointmentsList({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final appointControler = Get.find<AppointmentController>();
+
+    List<AppointmentModel> appointments = appointControler.getAppointByStatus(status);
+
+    return ListView.builder(
+      itemCount: appointments.length,
+      itemBuilder: (context, index) {
+        AppointmentModel appointmentModel = appointments[index];
+        return AppointmentCard(appointmentModel: appointmentModel);
+      },
+    );
+  }
+}
+
+class AppointmentCard extends StatelessWidget {
+  final AppointmentModel appointmentModel;
+
+  AppointmentCard({required this.appointmentModel});
+
+  @override
+  Widget build(BuildContext context) {
+    late Icon icon;
+
+    switch (appointmentModel.status) {
+      case 'Open':
+        icon = Icon(Icons.pending, color: vermelho);
+        break;
+      case 'Closed':
+        icon = Icon(Icons.pending, color: verde);
+        break;
+      case 'Reversal':
+        icon = Icon(Icons.pending, color: azul);
+        break;
+   
+    }
+
+    return Card(
+      elevation: 3,
+      margin: EdgeInsets.all(10),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              dense: true,
+              title: Text(appointmentModel.date!.toString()),
+              subtitle: Text("Date"),
+              trailing: IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.download),
+                color: preto,
+              ),
             ),
-          ),
-        ],
-        bottom: TabBar(
-          tabs: [
-            Tab(text: 'Aktual Termin'),
-            Tab(text: 'Geschlossen'),
-            Tab(text: 'Abgesagt'),
+            Row(
+              children: [
+                icon,
+                SizedBox(width: 5),
+                Text('${appointmentModel.time}'),
+              ],
+            ),
+            Text('Status: ${appointmentModel.status}'),
+            Text('Notas: ${appointmentModel.notes}'),
           ],
         ),
       ),
-      body: TabBarView(
-        children: [
-          therapyInfoCard(
-            'Zahlungsstatus: Offene',
-            'Britta',
-            0001,
-            '20. Oktober 2023',
-          ),
-          therapyInfoCard(
-            'Zahlungsstatus: Bezahlt ',
-            'Kindermann',
-            0002,
-            '01. Oktober 2023',
-          ),
-          therapyInfoCard(
-            'Zahlungsstatus: Storniert',
-            'Petter',
-            0003,
-            '02. Oktober 2023',
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget therapyInfoCard(
-  String statusText,
-  String clientName,
-  int clienteNumber,
-  String payDate,
-) {
-  return Card(
-    elevation: 3,
-    margin: EdgeInsets.all(10),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Kunder: $clientName',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            'Kunder Nummer: $clienteNumber',
-            style: TextStyle(fontSize: 10),
-          ),
-          SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.pending,
-                  color: verde,
-                ),
-                SizedBox(width: 5),
-                Text('$statusText'),
-              ],
-            ),
-          ),
-          SizedBox(height: 10),
-          ListTile(
-            title: Text("Nächste Zahlung"),
-            subtitle: Text(payDate),
-          ),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }

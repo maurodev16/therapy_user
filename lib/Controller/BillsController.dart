@@ -3,16 +3,15 @@ import 'package:get/get.dart';
 import '../Models/BillsModel.dart';
 
 class BillsController extends GetxController {
-  late final List<BillModel> pendingBills;
+  late final List<BillModel> pendingBills;  
+  List<BillModel> overdueBills = <BillModel>[].obs;
+  List<BillModel> refundRequests = <BillModel>[].obs;
   @override
   void onInit() async {
     pendingBills = getBillsByStatus('pending');
     await separateBills();
     super.onInit();
   }
-
-  List<BillModel> overdueBills = <BillModel>[].obs;
-  List<BillModel> refundRequests = <BillModel>[].obs;
 
   List<BillModel> getBillsByStatus(String status) {
     return [

@@ -26,7 +26,7 @@ class RepositoryAppointment extends GetConnect
   Future<AppointmentModel> create(AppointmentModel appointmentModel) async {
     try {
       final response = await httpClient.post(
-          'http://localhost:3001/api/v1/appointment/create-appointment',
+          'https://therapy-bv4t.onrender.com/api/v1/appointment/create-appointment',
           body: appointmentModel.toJson());
 
       if (response.status.isOk) {
@@ -47,7 +47,34 @@ class RepositoryAppointment extends GetConnect
       return throw Exception(e.toString());
     }
   }
+  @override
+  Future<List<AppointmentModel>> getAppointByUserId(String id) async {
+   final response = await httpClient.get('https://therapy-bv4t.onrender.com/api/v1/appointment/fetch-all-appointments', query: {'_id':id});
+     if (response.status.isOk) {
+        var jsonResponse = await response.body;
+        List<dynamic> postList = jsonResponse;
+        return postList
+            .map<AppointmentModel>(
+                (item) => AppointmentModel.fromJson(item))
+            .toList();
+      }
 
+      if (response.status.hasError) {
+        return [];
+      }
+      if (response.status.isNotFound) {
+        return [];
+      }
+      if (response.status.connectionError) {
+        return [];
+      }
+      print("Body fetch by user id Response:::::::::::::${response.bodyString}");
+
+      throw Exception(response.bodyString);
+    // } catch (e) {
+    //   throw Exception(e.toString());
+    // }
+  }
   @override
   // ignore: override_on_non_overriding_member
   Future<void> deleteUser(String id) async {}
@@ -61,10 +88,7 @@ class RepositoryAppointment extends GetConnect
   @override
   Future<void> deleteAppointment(String id) async {}
 
-  @override
-  Future<List<AppointmentModel>> fetchAppointmentByUserId(String id) async {
-    throw UnimplementedError();
-  }
+
 
   @override
   Future<void> updateAppointment(String id) async {
