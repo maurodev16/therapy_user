@@ -1,5 +1,6 @@
 
 import 'package:get/get.dart';
+import 'package:therapy_user/pages/AppointmentPage.dart';
 
 import '../Pages/Authentication/Pages/LoginPage.dart';
 import '../pages/Authentication/Pages/Register/CreateUserPage.dart';
@@ -10,7 +11,7 @@ class AppRoutes {
   static const LOGIN_PAGE = '/login_page';
   static const CREATE_USER_PAGE = '/create_user_page';
   static const HOME_PAGE = '/home_page';
-
+static const APPOINMENT_PAGE = '/appointment_age';
   static const AUTH_ONBOARD_PAGE = '/auth_onboard_page';
   static const GENERAL_POSTS_PAGE = '/general_events_page';
   static const PROFILE_PAGE = '/profile_page';
@@ -23,7 +24,9 @@ class AppRoutes {
     ///
     GetPage(name: CREATE_USER_PAGE, page: () => CreateUserPage()),
 
-    // ///
+    // 
+    GetPage(name: APPOINMENT_PAGE, page: ()=> AppointmentPage()),
+    ///
     // GetPage(name: AUTH_ONBOARD_PAGE, page: () => AuthOnboardPage()),
 
     ///

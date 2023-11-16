@@ -15,8 +15,6 @@ class AppointmentModel {
   List<RelatedDocumentsModel>? relatedDocumentsModel;
   bool? isCanceled;
   String? status;
-  DateTime? createdAt;
-  DateTime? updatedAt;
 
   AppointmentModel({
     this.id,
@@ -29,8 +27,6 @@ class AppointmentModel {
     this.relatedDocumentsModel,
     this.isCanceled,
     this.status,
-    this.createdAt,
-    this.updatedAt,
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
@@ -40,17 +36,14 @@ class AppointmentModel {
       time: DateTime.parse(json['time']),
       notes: json['notes'],
       userModel: UserModel.fromJson(json['user_obj']),
-      serviceTypeModel: List<ServiceTypeModel>.from(
-          json['service_type_obj'].map((x) => ServiceTypeModel.fromJson(x))),
-      paymentModel: List<PaymentModel>.from(
-          json['Payment_obj'].map((x) => PaymentModel.fromJson(x))),
-      relatedDocumentsModel: List<RelatedDocumentsModel>.from(
-          json['related_documents_obj']
-              .map((x) => RelatedDocumentsModel.fromJson(x))),
+      serviceTypeModel: 
+          json['service_type_obj'],
+      paymentModel:
+          json['Payment_obj'],
+      relatedDocumentsModel:
+          json['related_documents_obj'],
       isCanceled: json['is_canceled'],
       status: json['status'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
@@ -61,16 +54,11 @@ class AppointmentModel {
       'time': time!.toIso8601String(),
       'notes': notes,
       'user_obj': userModel!.toJson(),
-      'service_type_obj':
-          List<dynamic>.from(serviceTypeModel!.map((x) => x.toJson())),
-      'Payment_obj': List<dynamic>.from(paymentModel!.map((x) => x.toJson())),
-      'related_documents_obj':
-          List<dynamic>.from(relatedDocumentsModel!.map((x) => x.toJson())),
+      'service_type_obj': serviceTypeModel,
+      'Payment_obj': paymentModel,
+      'related_documents_obj': relatedDocumentsModel,
       'is_canceled': isCanceled,
       'status': status,
-      'createdAt': createdAt!.toIso8601String(),
-      'updatedAt': updatedAt!.toIso8601String(),
     };
   }
 }
-

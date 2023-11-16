@@ -230,14 +230,13 @@ class AuthController extends GetxController with StateMixin<UserModel> {
 
   bool get validateConfPassword => confirmPassword!.value == password!.value;
   bool isValid() {
-    update();
     if (!validateEmail) {
       return false;
-    }
-    if (!validatePassword) {
+    } else if (!validatePassword) {
       return false;
+    } else {
+      return true;
     }
-    return true;
   }
 
   bool get enableButton => isValid() == true;

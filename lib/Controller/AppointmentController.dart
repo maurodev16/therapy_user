@@ -1,4 +1,3 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:therapy_user/IRepository/IRepositoryAppointment.dart';
@@ -8,7 +7,6 @@ import 'package:therapy_user/Models/ServiceTypeModel.dart';
 import '../Models/PaymentModel.dart';
 import '../Models/RelatedDocumentsModel.dart';
 import '../Repository/RespositoryAuth.dart';
-import '../Utils/Colors.dart';
 import 'AuthController.dart';
 
 class AppointmentController extends GetxController
@@ -16,14 +14,13 @@ class AppointmentController extends GetxController
   final IRepositoryAppointment _irepository;
   AppointmentController(this._irepository);
   final storage = GetStorage();
+
+  ///
+
   @override
   void onInit() {
-    
     super.onInit();
   }
-
-  final List<String> daysOfWeek =
-      ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].obs;
 
   final List<String> timeStrings = [
     '08:00',
@@ -39,9 +36,6 @@ class AppointmentController extends GetxController
     '18:00',
   ];
 
-  
-
-
   // Simulação de datas já agendadas (em vermelho)
   final List<DateTime> bookedDates = [
     DateTime.now().add(Duration(days: 2)),
@@ -50,19 +44,11 @@ class AppointmentController extends GetxController
   ].obs;
 
   ///
-  late final Rx<AppointmentModel> _appointmentData;
-  Rx<AppointmentModel> get getAppointmentData => this._appointmentData;
-  set setAppointmentData(Rx<AppointmentModel> appointmentData) {
-    update();
-    this._appointmentData = appointmentData;
-  }
-
-  ///
   final AuthController authController =
       Get.put<AuthController>(AuthController(RepositoryAuth()));
   RxString id = ''.obs;
-  Rx<DateTime>? selectedData = DateTime.now().obs;
-  Rx<DateTime>? selectedTime = DateTime.now().obs;
+  Rx<DateTime> selectedData = DateTime.now().obs;
+  Rx<DateTime> selectedTime = DateTime.now().obs;
   RxString notes = ''.obs;
   RxList<ServiceTypeModel> serviceTypeModel = <ServiceTypeModel>[].obs;
   RxList<PaymentModel> paymentModel = <PaymentModel>[].obs;
@@ -72,52 +58,30 @@ class AppointmentController extends GetxController
   Rx<DateTime>? updatedAt;
   RxBool isLoading = false.obs;
   RxString appointStatus = 'open'.obs;
+ late AppointmentModel appointmentData;
 
-  Future<AppointmentModel> create() async {
-    isLoading.value = true;
-    try {
-      final newAppointment = AppointmentModel(
-        date: selectedData!.value,
-        time: selectedTime!.value,
+  Future<AppointmentModel?> create() async {
+   
+    appointmentData = AppointmentModel(
+        date: selectedData.value,
+        time: selectedTime.value,
         notes: notes.value,
         userModel: authController.getUserData.value,
-        isCanceled: isCanceled.value,
-      ).obs;
+       status:  appointStatus.value,
+      );
       AppointmentModel response =
-          await _irepository.create(newAppointment.value);
+          await _irepository.create(appointmentData);
       if (response.id != null) {
-        _appointmentData.update((appointment) {
-          appointment!.id = response.id;
-          appointment.date = response.date;
-          appointment.time = response.time;
-          appointment.notes = response.notes;
-          appointment.userModel = response.userModel;
-          appointment.isCanceled = response.isCanceled;
-          appointment.createdAt = response.createdAt;
-          appointment.updatedAt = response.updatedAt;
-          appointment.paymentModel = response.paymentModel;
-          appointment.relatedDocumentsModel = response.relatedDocumentsModel;
-          appointment.serviceTypeModel = response.serviceTypeModel;
-          appointment.status = response.status;
-        });
-            print("TOKEN:::${response.id}");
-          print("GET USER DATA ::::::::::::$getAppointmentData");
-       
-          Fluttertoast.showToast(
-            msg: 'Suppi, Deine Termin wurde erfolgreich gebucht!',
-            backgroundColor: verde,
-          );
-          // Atualiza o estado com a resposta bem-sucedida
-          change(response, status: RxStatus.success());
-          Get.back();
-        return _appointmentData.value;
+        
+        print("TOKEN:::${response.id}");
+        print("GET USER DATA ::::::::::::$response");
+        // Atualiza o estado com a resposta bem-sucedida
+        change(response, status: RxStatus.success());
+
+        return response;
       }
-    } catch (e) {
-      print(e.toString());
-    } finally {
-      isLoading.value = false;
-    }
+    
     update();
-    return _appointmentData.value;
+    return appointmentData;
   }
 }
