@@ -1,6 +1,5 @@
 import 'package:therapy_user/Models/UserModel.dart';
 
-import 'PaymentModel.dart';
 import 'RelatedDocumentsModel.dart';
 import 'ServiceTypeModel.dart';
 
@@ -11,7 +10,6 @@ class AppointmentModel {
   String? notes;
   UserModel? userModel;
   List<ServiceTypeModel>? serviceTypeModel;
-  List<PaymentModel>? paymentModel;
   List<RelatedDocumentsModel>? relatedDocumentsModel;
   bool? isCanceled;
   String? status;
@@ -23,7 +21,6 @@ class AppointmentModel {
     this.notes,
     this.userModel,
     this.serviceTypeModel,
-    this.paymentModel,
     this.relatedDocumentsModel,
     this.isCanceled,
     this.status,
@@ -42,8 +39,6 @@ class AppointmentModel {
       userModel: UserModel.fromJson(json['user_obj']),
       serviceTypeModel: 
           json['service_type_obj'],
-      paymentModel:
-          json['Payment_obj'],
       relatedDocumentsModel:
           json['related_documents_obj'],
       isCanceled: json['is_canceled'],
@@ -59,7 +54,6 @@ class AppointmentModel {
       'notes': notes,
       'user_obj': userModel!.toJson(),
       'service_type_obj': serviceTypeModel,
-      'Payment_obj': paymentModel,
       'related_documents_obj': relatedDocumentsModel,
       'is_canceled': isCanceled,
       'status': status,

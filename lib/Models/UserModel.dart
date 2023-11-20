@@ -1,3 +1,7 @@
+
+
+import 'InvoiceModel.dart';
+
 class UserModel {
   String? userId;
   int? clientNumber;
@@ -5,8 +9,11 @@ class UserModel {
   String? lastname;
   String? email;
   String? password;
+  String? phone;
   String? token;
   String? userType;
+  List<InvoiceModel>? invoiceObj;
+  int? invoiceQnt;
   DateTime? createdAt;
   DateTime? updatedAt;
   UserModel({
@@ -15,8 +22,11 @@ class UserModel {
     this.firstname,
     this.lastname,
     this.email,
+    this.phone,
     this.token,
     this.userType,
+    this.invoiceObj,
+    this.invoiceQnt,
     this.password,
     this.createdAt,
     this.updatedAt,
@@ -29,11 +39,16 @@ class UserModel {
       firstname: json['first_name'],
       lastname: json['last_name'],
       email: json['email'],
+      phone: json['phone'],
       password: json['password'],
       token: json['token'],
+      invoiceObj:json['invoice_obj'] != null
+        ? (json['invoice_obj'] as List<dynamic>)
+            .map((serviceTypeJson) => InvoiceModel.fromJson(serviceTypeJson))
+            .toList()
+        : null, 
+        invoiceQnt: json['invoice_qnt'],
       userType: json['user_type'] = 'client',
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 
@@ -44,11 +59,12 @@ class UserModel {
       'first_name': firstname,
       'last_name': lastname,
       'email': email,
+      'phone': phone,
       'password': password,
       'token': token,
+      'invoice_obj': invoiceObj,
+      'invoice_qnt':invoiceQnt,
       'user_type': userType,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
     };
   }
 }

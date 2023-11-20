@@ -6,7 +6,6 @@ import 'package:therapy_user/Models/AppointmentModel.dart';
 import 'package:therapy_user/Models/ServiceTypeModel.dart';
 import 'package:therapy_user/Utils/Colors.dart';
 
-import '../Models/PaymentModel.dart';
 import '../Models/RelatedDocumentsModel.dart';
 import '../Repository/RespositoryAuth.dart';
 import 'AuthController.dart';
@@ -60,7 +59,6 @@ class AppointmentController extends GetxController
   Rx<DateTime> selectedTime = DateTime.now().obs;
   RxString notes = ''.obs;
   RxList<ServiceTypeModel> serviceTypeModel = <ServiceTypeModel>[].obs;
-  RxList<PaymentModel> paymentModel = <PaymentModel>[].obs;
   List<RelatedDocumentsModel> relatedDocumentsModel = <RelatedDocumentsModel>[];
   RxBool isCanceled = false.obs;
   Rx<DateTime>? createdAt;

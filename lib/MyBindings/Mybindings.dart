@@ -27,7 +27,7 @@ class MyBinding implements Bindings {
     Get.put<AuthController>(AuthController(Get.find()), permanent: true);
     Get.lazyPut<BottomNavigationController>(() => BottomNavigationController());
 
-    Get.lazyPut<BillsController>(() => BillsController());
+    Get.lazyPut<InvoiceController>(() => InvoiceController());
 
     /// REPOSITORIES
     Get.lazyPut<IRepositoryUser>(() => RepositoryUser());

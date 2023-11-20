@@ -145,6 +145,56 @@ class CreateUserPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 0.03 * Get.height),
+
+                Container(
+                  width: 0.95 * Get.width,
+                  child: Obx(
+                    () => TextFormField(
+                      style: TextStyle(color: verde),
+                      enabled: !controller.isLoading.value,
+                      keyboardType: TextInputType.phone,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: InputDecoration(
+                        fillColor: branco,
+                        errorText: controller.errorPhone,
+                        labelText: 'Phone'.tr,
+                        labelStyle:
+                            GoogleFonts.lato(color: verde, fontSize: 16.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: verde,
+                            width: 1.0,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: preto,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: verde,
+                            width: 1,
+                          ),
+                        ),
+                 
+                        filled: true,
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                      ),
+                      onChanged: (value) {
+                        controller.phone.value = value;
+                        print( controller.phone.value);
+
+                      },
+                    ),
+                  ),),
+               SizedBox(height: 0.03 * Get.height),
+                
                 ///
                 Container(
                   width: 0.95 * Get.width,

@@ -39,6 +39,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
   RxInt? clientNumber = 0.obs;
   RxString firstname = ''.obs;
   RxString lastname = ''.obs;
+  RxString phone = ''.obs;
   RxString email = ''.obs;
   RxString password = ''.obs;
   RxString confirmPassword = ''.obs;
@@ -47,21 +48,6 @@ class UserController extends GetxController with StateMixin<UserModel> {
   RxBool isLoading = false.obs;
   RxString errorMessage = ''.obs;
 
-  ///
-  bool get validateLastname =>
-      lastname.value.trim().isNotEmpty &&
-      lastname.value.length <= 90 &&
-      lastname.value.length > 1;
-  String? get errorLastName {
-    if (validateLastname)
-      return null;
-    else if (lastname.value.isEmpty) {
-      return null;
-    } else if (lastname.value.length < 2) {
-      return "Last name is to short!";
-    }
-    return "Last name is to long!";
-  }
 
   ///
   bool get validateFirstName =>
@@ -77,6 +63,36 @@ class UserController extends GetxController with StateMixin<UserModel> {
       return "First name is to short!";
     }
     return "Frist name is to long!";
+  }
+  ///
+  bool get validateLastname =>
+      lastname.value.trim().isNotEmpty &&
+      lastname.value.length <= 90 &&
+      lastname.value.length > 1;
+  String? get errorLastName {
+    if (validateLastname)
+      return null;
+    else if (lastname.value.isEmpty) {
+      return null;
+    } else if (lastname.value.length < 2) {
+      return "Last name is to short!";
+    }
+    return "Last name is to long!";
+  }
+  ///
+  bool get validatePhone =>
+      phone.value.trim().isNotEmpty &&
+      phone.value.length <= 18 &&
+      phone.value.length > 5;
+  String? get errorPhone {
+    if (validatePhone)
+      return null;
+    else if (phone.value.isEmpty) {
+      return null;
+    } else if (phone.value.length < 5) {
+      return "Phone number is invalid!";
+    }
+    return "Phone number is to invalid!";
   }
 
   ///
@@ -121,6 +137,8 @@ class UserController extends GetxController with StateMixin<UserModel> {
     }
     if (!validateLastname) {
       return false;
+    } if (!validatePhone) {
+      return false;
     }
     if (!validateEmail) {
       return false;
@@ -150,6 +168,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
           lastname: lastname.value,
           email: email.value,
           password: password.value,
+          phone: phone.value,
         ).obs;
 
         UserModel? createdUser = await _iRepositoryUser.create(newUser.value);
@@ -162,6 +181,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
           user.clientNumber = createdUser.clientNumber;
           user.firstname = createdUser.firstname;
           user.lastname = createdUser.lastname;
+          user.phone = createdUser.phone;
           user.email = createdUser.email;
           user.password = createdUser.password;
           user.userType = createdUser.userType;
@@ -195,6 +215,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
   void cleanInputs() {
     firstname.value = '';
     lastname.value = '';
+    phone.value = '';
     email.value = '';
     password.value = '';
     userType.value = '';

@@ -24,7 +24,7 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
   Future<UserModel> create(UserModel userModel) async {
     try {
       final response =
-          await httpClient.post('user/create', body: userModel.toJson());
+          await httpClient.post('/user/create', body: userModel.toJson());
 
       if (response.status.isOk) {
         final Map<String, dynamic> responseData = await response.body;

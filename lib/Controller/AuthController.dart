@@ -230,6 +230,8 @@ class AuthController extends GetxController with StateMixin<UserModel> {
 
   bool get validateConfPassword => confirmPassword!.value == password!.value;
   bool isValid() {
+    update();
+    
     if (!validateEmail) {
       return false;
     } else if (!validatePassword) {
@@ -238,7 +240,13 @@ class AuthController extends GetxController with StateMixin<UserModel> {
       return true;
     }
   }
-
+ bool? get loginButtonEnabled {
+    if (validateEmailLogin && validatePasswordLogin) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   bool get enableButton => isValid() == true;
 
   void togglePasswordVisibility() {
@@ -269,11 +277,5 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     return "Invalid password, please verify";
   }
 
-  bool? get loginButtonEnabled {
-    if (validateEmailLogin && validatePasswordLogin) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+ 
 }
