@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -48,7 +50,6 @@ class UserController extends GetxController with StateMixin<UserModel> {
   RxBool isLoading = false.obs;
   RxString errorMessage = ''.obs;
 
-
   ///
   bool get validateFirstName =>
       firstname.value.trim().isNotEmpty &&
@@ -64,6 +65,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
     }
     return "Frist name is to long!";
   }
+
   ///
   bool get validateLastname =>
       lastname.value.trim().isNotEmpty &&
@@ -79,6 +81,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
     }
     return "Last name is to long!";
   }
+
   ///
   bool get validatePhone =>
       phone.value.trim().isNotEmpty &&
@@ -137,7 +140,8 @@ class UserController extends GetxController with StateMixin<UserModel> {
     }
     if (!validateLastname) {
       return false;
-    } if (!validatePhone) {
+    }
+    if (!validatePhone) {
       return false;
     }
     if (!validateEmail) {
@@ -173,43 +177,60 @@ class UserController extends GetxController with StateMixin<UserModel> {
 
         UserModel? createdUser = await _iRepositoryUser.create(newUser.value);
         print('Novo usuário ID: ${createdUser!.userId}');
-
-        change(createdUser, status: RxStatus.success());
-        isLoading.value = false;
-        _userData.update((user) {
-          user!.userId = createdUser.userId;
-          user.clientNumber = createdUser.clientNumber;
-          user.firstname = createdUser.firstname;
-          user.lastname = createdUser.lastname;
-          user.phone = createdUser.phone;
-          user.email = createdUser.email;
-          user.password = createdUser.password;
-          user.userType = createdUser.userType;
-          user.createdAt = createdUser.createdAt;
-          user.updatedAt = createdUser.updatedAt;
-        });
-        print('_UserData: ${_userData.value}');
-
-        return createdUser;
-      } catch (e) {
-        e.printError();
-
-        errorMessage.value = e.toString();
-        if (errorMessage.value.contains("EmailAlreadyExistsException")) {
-          Fluttertoast.showToast(msg: 'Email Already Exist');
-        } else if (errorMessage.value
-            .contains("ErroSignupOnDatabaseException")) {
+        if (createdUser.userId != null) {
+          change(createdUser, status: RxStatus.success());
+          
           Fluttertoast.showToast(
-              msg: 'Erro Signup On Database, try again later',
-              backgroundColor: branco);
+              msg:
+                  "Hallo ${createdUser.firstname} ${createdUser.lastname}, willkommen in unserer App."
+                      .tr);
+          Get.toNamed('/login_page');
+
+          isLoading.value = false;
+          _userData.update((user) {
+            user!.userId = createdUser.userId;
+            user.clientNumber = createdUser.clientNumber;
+            user.firstname = createdUser.firstname;
+            user.lastname = createdUser.lastname;
+            user.phone = createdUser.phone;
+            user.email = createdUser.email;
+            user.password = createdUser.password;
+            user.userType = createdUser.userType;
+            user.createdAt = createdUser.createdAt;
+            user.updatedAt = createdUser.updatedAt;
+          });
+          print('_UserData: ${_userData.value}');
+          return createdUser;
         }
-        change(null, status: RxStatus.error(errorMessage.value));
+      } catch (error) {
+        Get.toNamed('/create_user_page');
+        await handleRegisterError(error.toString());
+        error.printError();
       } finally {
         isLoading.value = false;
       }
     }
     update();
     return _userData.value;
+  }
+
+  Future<void> handleRegisterError(String error) async {
+    String errorMessage;
+    if (error.contains("EmailAlreadyExistsException")) {
+      errorMessage = 'Diese Email existiert bereits';
+    } else if (error.contains("ErroSignupOnDatabaseException")) {
+      errorMessage =
+          'Serveraktualisierung, versuchen Sie es später noch einmal';
+    } else if (error.contains("PhoneAlreadyExistsException")) {
+      errorMessage = 'Dieses Telefon existiert bereits';
+    } else {
+      errorMessage =
+          "Serveraktualisierung, versuchen Sie es später noch einmal";
+    }
+
+    isLoading.value = false;
+    Fluttertoast.showToast(msg: errorMessage, backgroundColor: branco);
+    change(null, status: RxStatus.error(errorMessage));
   }
 
   void cleanInputs() {

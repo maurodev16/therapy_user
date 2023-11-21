@@ -1,34 +1,81 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:therapy_user/IRepository/IRepositoryAppointment.dart';
-import 'package:therapy_user/Models/AppointmentModel.dart';
-import 'package:therapy_user/Models/ServiceTypeModel.dart';
-import 'package:therapy_user/Utils/Colors.dart';
+import 'package:therapy_user/Controller/AuthController.dart';
 
+import '../IRepository/IRepositoryAppointment.dart';
+import '../Models/AppointmentModel.dart';
 import '../Models/RelatedDocumentsModel.dart';
-import '../Repository/RespositoryAuth.dart';
-import 'AuthController.dart';
+import '../Models/ServiceTypeModel.dart';
+import '../Utils/Colors.dart';
 
 class AppointmentController extends GetxController
     with StateMixin<List<AppointmentModel>> {
   final IRepositoryAppointment _irepository;
   AppointmentController(this._irepository);
   final storage = GetStorage();
-  final AuthController authController =
-      Get.put<AuthController>(AuthController(RepositoryAuth()));
-  late final RxList<AppointmentModel> allAppoint=<AppointmentModel>[].obs;
-  final RxList<AppointmentModel> openAppoint = <AppointmentModel>[].obs;
-  RxList<AppointmentModel> closedAppoint = <AppointmentModel>[].obs;
-  RxList<AppointmentModel> reversalAppoint = <AppointmentModel>[].obs;
+  final auth = Get.find<AuthController>();
+  RxList<AppointmentModel> allAppoint = <AppointmentModel>[].obs;
+  RxList<AppointmentModel> openAppoint = <AppointmentModel>[].obs;
+  RxList<AppointmentModel> doneAppoint = <AppointmentModel>[].obs;
+  RxList<AppointmentModel> canceledAppoint = <AppointmentModel>[].obs;
 
-  ///
+  ////
+  RxString id = ''.obs;
+  Rx<DateTime> selectedData = DateTime.now().obs;
+  Rx<DateTime> selectedTime = DateTime.now().obs;
+  RxString notes = ''.obs;
+  RxList<ServiceTypeModel> serviceTypeModel = <ServiceTypeModel>[].obs;
+  List<RelatedDocumentsModel> relatedDocumentsModel = <RelatedDocumentsModel>[];
+  RxBool isCanceled = false.obs;
+  Rx<DateTime>? createdAt;
+  Rx<DateTime>? updatedAt;
+  RxBool isLoading = false.obs;
+  RxString appointStatus = 'open'.obs;
+  late AppointmentModel appointmentData;
 
   @override
   void onInit() async {
-  allAppoint.value=  await getAppointByUserId(authController.getUserData.value.userId!);
-    await separateAppoints();
+    await getSeparateAppoints(auth.getUserData.value.userId!);
     super.onInit();
+  }
+
+  Future<List<AppointmentModel>> getSeparateAppoints(String userId) async {
+    isLoading.value = true;
+    try {
+      var response = await _irepository.getAppointByUserId(userId);
+
+      if (response.isNotEmpty) {
+        // Limpe as listas existentes.
+        allAppoint.clear();
+        openAppoint.clear();
+        doneAppoint.clear();
+        canceledAppoint.clear();
+
+        for (AppointmentModel appointment in response) {
+          allAppoint.add(appointment);
+          appointment.status!.contains("open")
+              ? openAppoint.add(appointment)
+              : appointment.status!.contains("done")
+                  ? doneAppoint.add(appointment)
+                  : appointment.status!.contains("canceled")
+                      ? canceledAppoint.add(appointment)
+                      : allAppoint.add(appointment);
+        }
+
+        change(response, status: RxStatus.success());
+      } else {
+        change([], status: RxStatus.empty());
+        // Limpe as listas existentes.
+        return [];
+      }
+    } catch (e) {
+      change([], status: RxStatus.error());
+      print(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+    return allAppoint;
   }
 
   final List<String> timeStrings = [
@@ -54,19 +101,6 @@ class AppointmentController extends GetxController
 
   ///
 
-  RxString id = ''.obs;
-  Rx<DateTime> selectedData = DateTime.now().obs;
-  Rx<DateTime> selectedTime = DateTime.now().obs;
-  RxString notes = ''.obs;
-  RxList<ServiceTypeModel> serviceTypeModel = <ServiceTypeModel>[].obs;
-  List<RelatedDocumentsModel> relatedDocumentsModel = <RelatedDocumentsModel>[];
-  RxBool isCanceled = false.obs;
-  Rx<DateTime>? createdAt;
-  Rx<DateTime>? updatedAt;
-  RxBool isLoading = false.obs;
-  RxString appointStatus = 'open'.obs;
-  late AppointmentModel appointmentData;
-
   Future<AppointmentModel?> create() async {
     isLoading.value = true;
     update();
@@ -76,15 +110,23 @@ class AppointmentController extends GetxController
         date: selectedData.value,
         time: selectedTime.value,
         notes: notes.value,
-        userModel: authController.getUserData.value,
+        userModel: auth.getUserData.value,
         status: appointStatus.value,
       );
       AppointmentModel response = await _irepository.create(appointmentData);
+      appointmentData.id = response.id;
+      appointmentData.serviceTypeModel = response.serviceTypeModel;
+
       if (response.id != null) {
-        print("TOKEN:::${response.id}");
-        print("GET USER DATA ::::::::::::$response");
-        // Atualiza o estado com a resposta bem-sucedida
+        print("Appointment ID response:::${response.id}");
         change([], status: RxStatus.success());
+        Fluttertoast.showToast(
+          msg: 'Suppi, Deine Termin wurde erfolgreich gebucht!',
+          backgroundColor: verde,
+        );
+
+        Get.back();
+        reloadAppointmentdata();
         update();
 
         return response;
@@ -122,100 +164,7 @@ class AppointmentController extends GetxController
     update();
   }
 
-  ///
-  RxString errorMessage = "".obs;
-  Future<List<AppointmentModel>> getAppointByUserId(String id) async {
-    try {
-      isLoading.value = true;
-      var response = await _irepository.getAppointByUserId(id);
-      if (response.isEmpty) {
-        change([], status: RxStatus.empty());
-        allAppoint.refresh();
-        allAppoint.value = [];
-        errorMessage.value = "No Appointment for this User";
-        change(null, status: RxStatus.empty());
-        update();
-        return [];
-      } else {
-        allAppoint.refresh();
-        allAppoint.assignAll(response);
-        change(response, status: RxStatus.success());
-        update();
-
-        print("ALL POSTS::::::::::::::::::::$response");
-        return allAppoint;
-      }
-    } catch (e) {
-      change(null, status: RxStatus.error("${e.toString()}"));
-
-      print("ERROR::::::.*********${e.toString()}");
-      return [];
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  List<AppointmentModel> getAppointByStatus(String status) {
-    return [
-      
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-      AppointmentModel(
-          time: DateTime(2023, 11, 14),
-          date: DateTime(2023, 11, 14),
-          status: status),
-    ].obs;
-  }
-
-  bool isAppointOpen(AppointmentModel appointmentModel) {
-    // Verifica se ainda vai passar do prazo
-    return appointmentModel.date!.isAfter(DateTime.now());
-  }
-
-  // Método para separar os Abertos Fechados e os pedidos de Cancelado
-  Future<void> separateAppoints() async {
-    for (AppointmentModel appointment in openAppoint) {
-      bool isOpen = isAppointOpen(appointment);
-      if (isOpen) {
-        // Adicionar à lista de pagamentos vencidos
-        closedAppoint.add(appointment);
-      } else {
-        // Adicionar à lista de pedidos de estorno (se necessário)
-        if (appointment.status == 'Reversal') {
-          reversalAppoint.add(appointment);
-        }
-      }
-      update();
-    }
+  Future<void> reloadAppointmentdata() async {
+    await getSeparateAppoints(auth.getUserData.value.userId!);
   }
 }

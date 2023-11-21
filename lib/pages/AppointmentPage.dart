@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +19,12 @@ class AppointmentPage extends StatelessWidget {
       init: AppointmentController(RepositoryAppointment()),
       builder: (controller) => Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: () async{
+              await  controller.reloadAppointmentdata();
+              Get.back();
+              },
+              icon: Icon(Icons.arrow_back_ios)),
           title: Text('Sitzungsbuchung'),
         ),
         body: controller.isLoading.value
@@ -217,16 +222,7 @@ class AppointmentPage extends StatelessWidget {
                         onPressed:
                             clikedDate.value == true && clikedTime.value == true
                                 ? () async {
-                                    await controller.create().then((res) {
-                                      if (res!.id != null) {
-                                        Fluttertoast.showToast(
-                                          msg:
-                                              'Suppi, Deine Termin wurde erfolgreich gebucht!',
-                                          backgroundColor: verde,
-                                        );
-                                        Get.back();
-                                      } else {}
-                                    });
+                                    await controller.create();
                                   }
                                 : null,
                         child: Text('Sitzung buchen'),

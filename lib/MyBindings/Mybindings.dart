@@ -6,7 +6,7 @@ import 'package:therapy_user/Repository/RepositoryAppointment.dart';
 import 'package:therapy_user/Repository/RespositoryAuth.dart';
 
 import '../Controller/AppointmentController.dart';
-import '../Controller/BillsController.dart';
+import '../Controller/InvoiceController.dart';
 import '../Controller/BottomNavigationController.dart';
 import '../Controller/UserController.dart';
 import '../IRepository/IRepositoryUser.dart';

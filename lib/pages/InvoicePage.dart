@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Models/InvoiceModel.dart';
-import '../Controller/BillsController.dart';
+import '../Controller/InvoiceController.dart';
 import '../Utils/Colors.dart';
 
 class InvoicePage extends StatelessWidget {

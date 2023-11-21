@@ -42,7 +42,7 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
         return throw Exception(response.body);
       }
     } catch (e) {
-      print("Login error: $e");
+      print("Signup error: $e");
       throw Exception('An error occurred during Signup: $e');
     }
   }

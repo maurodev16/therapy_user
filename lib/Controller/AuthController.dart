@@ -81,6 +81,15 @@ class AuthController extends GetxController with StateMixin<UserModel> {
         print("response:::${response.token}");
 
         if (response.token!.isNotEmpty) {
+          // Exibe uma mensagem de sucesso e navega para a página de container
+          isLoggedIn.value = true;
+          Fluttertoast.showToast(
+            msg: 'Success, you are logged-In',
+            backgroundColor: verde,
+          );
+          // Atualiza o estado com a resposta bem-sucedida
+          change(response, status: RxStatus.success());
+          Get.offAll(() => BottomNavigationWidget());
           _userData.update((user) {
             user!.userId = response.userId;
             user.clientNumber = response.clientNumber;
@@ -94,15 +103,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           });
           print("TOKEN:::${response.token}");
           print("GET USER DATA ::::::::::::$getUserData");
-          // Exibe uma mensagem de sucesso e navega para a página de container
-          isLoggedIn.value = true;
-          Fluttertoast.showToast(
-            msg: 'Success, you are logged-In',
-            backgroundColor: verde,
-          );
-          // Atualiza o estado com a resposta bem-sucedida
-          change(response, status: RxStatus.success());
-          Get.offAll(() => BottomNavigationWidget());
+
           // Armazena os dados do usuário no storage
           storage.write('userId', _userData.value.userId);
           storage.write('clientNumber', _userData.value.clientNumber);
@@ -122,12 +123,13 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           token!.value = _userData.value.token!;
         } else {
           Fluttertoast.showToast(
-            msg: 'Inalid, Field invalid',
+            msg: 'Error, invalid Field',
             backgroundColor: verde,
           );
         }
       } catch (error) {
         print(error.toString());
+        await handleLoginError(error.toString());
       } finally {
         isLoadingLogin.value = false;
       }
@@ -135,18 +137,19 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     update();
   }
 
-  Future<void> handleLoginError(error) async {
+  Future<void> handleLoginError(String error) async {
     String errorMessage;
-    if (error.toString().contains("No User found with this email!")) {
+    if (error.contains("No User found with this email!")) {
       errorMessage = "No User found with this email!";
-    } else if (error.toString().contains("Password is required!")) {
+    } else if (error.contains("Password is required!")) {
       errorMessage = "Password is required!";
-    } else if (error.toString().contains("Incorrect password")) {
+    } else if (error.contains("Incorrect password")) {
       errorMessage = "Incorrect password";
-    } else if (error.toString().contains("An error occurred during login.")) {
+    } else if (error.contains("An error occurred during login.")) {
       errorMessage = "An error occurred during login.";
     } else {
-      errorMessage = "An unknown error occurred";
+      errorMessage =
+          "Serveraktualisierung, versuchen Sie es später noch einmal";
     }
 
     isLoggedIn.value = false;
@@ -176,22 +179,32 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   }
 
   RxBool isLogoutLoading = false.obs;
-  Future<void> logout() async {
-    await storage.erase();
 
-    if (storage.read<String>('token') == "" ||
-        storage.read<String>('token') == null) {
-      LoadingWidget();
-      Future.delayed(
-          Duration(seconds: 3),
-          () => {
-                Get.offAll('/login_page'),
-                isLogoutLoading.value = false,
-                Fluttertoast.showToast(msg: "Voce nao esta mais logado no app"),
-              });
-    } else {
-      Fluttertoast.showToast(msg: "Erro ao deslogar");
+  Future<void> logout() async {
+    isLogoutLoading.value = true;
+    try {
+      await storage.erase();
+
+      if (storage.read<String>('token') == "" ||
+          storage.read<String>('token') == null) {
+        LoadingWidget();
+        Future.delayed(
+            Duration(seconds: 3),
+            () => {
+                  Get.offAll('/login_page'),
+                  isLogoutLoading.value = false,
+                  Fluttertoast.showToast(
+                      msg: "Voce nao esta mais logado no app"),
+                });
+      } else {
+        Fluttertoast.showToast(msg: "Erro ao deslogar");
+      }
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      isLogoutLoading.value = false;
     }
+
     update();
   }
 
@@ -231,7 +244,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   bool get validateConfPassword => confirmPassword!.value == password!.value;
   bool isValid() {
     update();
-    
+
     if (!validateEmail) {
       return false;
     } else if (!validatePassword) {
@@ -240,13 +253,15 @@ class AuthController extends GetxController with StateMixin<UserModel> {
       return true;
     }
   }
- bool? get loginButtonEnabled {
+
+  bool? get loginButtonEnabled {
     if (validateEmailLogin && validatePasswordLogin) {
       return true;
     } else {
       return false;
     }
   }
+
   bool get enableButton => isValid() == true;
 
   void togglePasswordVisibility() {
@@ -276,6 +291,4 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     }
     return "Invalid password, please verify";
   }
-
- 
 }

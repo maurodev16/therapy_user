@@ -2,19 +2,17 @@ import 'package:get/get.dart';
 
 import '../Models/InvoiceModel.dart';
 
-class InvoiceController extends GetxController with StateMixin<List<InvoiceModel>> {
+class InvoiceController extends GetxController
+    with StateMixin<List<InvoiceModel>> {
   static InvoiceController get to => Get.find();
-  late final List<InvoiceModel> pendingInvoice;
+  List<InvoiceModel> pendingInvoice = <InvoiceModel>[].obs;
+  List<InvoiceModel> overdueInvoice = <InvoiceModel>[].obs;
+  List<InvoiceModel> refundRequests = <InvoiceModel>[].obs;
   @override
   void onInit() async {
-   
     await separateInvoice();
     super.onInit();
   }
-
-  List<InvoiceModel> overdueInvoice = <InvoiceModel>[].obs;
-  List<InvoiceModel> refundRequests = <InvoiceModel>[].obs;
-
 
   bool isPaymentDue(InvoiceModel invoice) {
     // Verifica se a data de vencimento é anterior à data atual

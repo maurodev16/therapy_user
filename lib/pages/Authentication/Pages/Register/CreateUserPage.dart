@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:therapy_user/GlobalWidgets/loadingWidget.dart';
@@ -377,22 +376,7 @@ class CreateUserPage extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: controller.enableButton
                           ? () async {
-                              await controller.signupUser().then(
-                                (value) {
-                                  if (value.userId != "" &&
-                                      value.userId != null) {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "Hallo ${value.firstname} ${value.lastname}, willkommen in unserer App."
-                                                .tr);
-                                    Get.toNamed('/login_page');
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg: "Es wird ein Fehler gesendet.".tr);
-                                    Get.toNamed('/create_user_page');
-                                  }
-                                },
-                              );
+                              await controller.signupUser();
                             }
                           : null,
                       style: ElevatedButton.styleFrom(

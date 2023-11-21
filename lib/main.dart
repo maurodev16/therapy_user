@@ -20,8 +20,9 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   await GetStorage.init();
- await initializeDateFormatting();
-//GetStorage().erase();
+  await initializeDateFormatting();
+
+///GetStorage().erase();
   runApp(MainApp());
 }
 
