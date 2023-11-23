@@ -11,7 +11,7 @@ class RepositoryAuth extends GetConnect implements IRepositoryAuth {
      final accessToken = StorageKeys.storagedToken;  
      
     httpClient.addRequestModifier<dynamic>((request) {
-      httpClient.timeout = Duration(seconds: 18);
+      httpClient.timeout = Duration(seconds: 30);
       request.headers['Authorization'] = 'Bearer $accessToken';
       request.headers['Accept'] = 'application/json';
       defaultContentType = "application/json; charset=utf-8";
@@ -31,10 +31,12 @@ try {
 
     if (response.status.isOk) {
       Map<String, dynamic> responseData = await response.body;
-      print("LoogedIn: $responseData");
-      return  UserModel.fromJson(responseData);
+       UserModel userData =  UserModel.fromJson(responseData);
+      print("userData: $userData");
+
+       return userData;
     } else {
-      return throw Exception(response.statusText);
+      return throw Exception(response.bodyString);
     }
 
      } catch (e) {

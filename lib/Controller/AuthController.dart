@@ -81,12 +81,6 @@ class AuthController extends GetxController with StateMixin<UserModel> {
         print("response:::${response.token}");
 
         if (response.token!.isNotEmpty) {
-          // Exibe uma mensagem de sucesso e navega para a página de container
-          isLoggedIn.value = true;
-          Fluttertoast.showToast(
-            msg: 'Success, you are logged-In',
-            backgroundColor: verde,
-          );
           // Atualiza o estado com a resposta bem-sucedida
           change(response, status: RxStatus.success());
           Get.offAll(() => BottomNavigationWidget());
@@ -141,15 +135,25 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     String errorMessage;
     if (error.contains("No User found with this email!")) {
       errorMessage = "No User found with this email!";
+      
     } else if (error.contains("Password is required!")) {
       errorMessage = "Password is required!";
+      
     } else if (error.contains("Incorrect password")) {
       errorMessage = "Incorrect password";
+      
     } else if (error.contains("An error occurred during login.")) {
       errorMessage = "An error occurred during login.";
+      
     } else {
-      errorMessage =
-          "Serveraktualisierung, versuchen Sie es später noch einmal";
+      isLoggedIn.value = true;
+      errorMessage = 'Success, you are logged-In';
+      // Exibe uma mensagem de sucesso e navega para a página de container
+      isLoggedIn.value = true;
+      Fluttertoast.showToast(
+        msg: errorMessage,
+        backgroundColor: verde,
+      );
     }
 
     isLoggedIn.value = false;

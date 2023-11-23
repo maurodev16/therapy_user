@@ -6,7 +6,6 @@ import 'package:therapy_user/GlobalWidgets/loadingWidget.dart';
 
 import '../../Controller/AppointmentController.dart';
 import '../GlobalWidgets/customAppBar.dart';
-import '../Utils/Colors.dart';
 
 class HomePage extends StatelessWidget {
   final AppointmentController appointmentController = Get.find();
@@ -83,6 +82,18 @@ Widget appointmentsScreen() {
                                     appointment.time!,
                                     appointment.userModel!.clientNumber!,
                                     appointment.status!,
+                                    TextButton.icon(
+                                      onPressed: () {
+                                        Get.defaultDialog(
+                                          title: "ABSAGEN",
+                                          middleText:
+                                              "Möchten Sie diesen Termin absagen?",
+                                        );
+                                      },
+                                      label: Text("Termin absagen?"),
+                                      icon: Icon(Icons.cancel),
+                                    ),
+                                  
                                   );
                                 },
                               )
@@ -115,6 +126,8 @@ Widget appointmentsScreen() {
                                       appointment.time!,
                                       appointment.userModel!.clientNumber!,
                                       appointment.status!,
+                                      Container(),
+                                   
                                     );
                                   },
                                 )
@@ -148,6 +161,8 @@ Widget appointmentsScreen() {
                                     appointment.time!,
                                     appointment.userModel!.clientNumber!,
                                     appointment.status!,
+                                    Container(),
+                                
                                   );
                                 },
                               )
@@ -159,16 +174,8 @@ Widget appointmentsScreen() {
   );
 }
 
-Widget therapyInfoCard(
-  String phone,
-  String email,
-  DateTime date,
-  DateTime time,
-  int clienteNumber,
-  String status,
-) {
-  final AppointmentController appointmentController = Get.find();
-
+Widget therapyInfoCard(String phone, String email, DateTime date, DateTime time,
+    int clienteNumber, String status, Widget textButton) {
   return Card(
     elevation: 3,
     margin: EdgeInsets.all(10),
@@ -201,27 +208,16 @@ Widget therapyInfoCard(
             'KN: $clienteNumber',
             style: TextStyle(fontSize: 10),
           ),
+          Text(
+            'Status: $status',
+            style: TextStyle(fontSize: 10),
+          ),
           SizedBox(height: 10),
+           textButton,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.pending,
-                color: verde,
-              ),
-              SizedBox(width: 5),
-              appointmentController.appointStatus.value.contains("open")
-                  ? TextButton.icon(
-                      onPressed: () {
-                        Get.defaultDialog(
-                          title: "ABSAGEN",
-                          middleText: "Möchten Sie diesen Termin absagen?",
-                        );
-                      },
-                      label: Text("Termin absagen?"),
-                      icon: Icon(Icons.cancel),
-                    )
-                  : Container()
+             
             ],
           ),
           SizedBox(height: 10),

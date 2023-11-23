@@ -13,7 +13,7 @@ class RepositoryAppointment extends GetConnect
   void onInit() async {
     // httpClient.baseUrl = dotenv.env['API_URL'];
     final accessToken = StorageKeys.storagedToken;
-    httpClient.timeout = Duration(seconds: 18);
+    httpClient.timeout = Duration(seconds: 30);
     httpClient.addRequestModifier<dynamic>((request) {
       request.headers['Authorization'] = 'Bearer $accessToken';
       request.headers['Accept'] = 'application/json';

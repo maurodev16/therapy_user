@@ -32,10 +32,14 @@ class AppointmentController extends GetxController
   Rx<DateTime>? updatedAt;
   RxBool isLoading = false.obs;
   RxString appointStatus = 'open'.obs;
-  late AppointmentModel appointmentData;
+   Rx<AppointmentModel> _appointmentData = AppointmentModel().obs;
+ AppointmentModel get appointmentData => this._appointmentData.value;
+
+ set appointmentData(AppointmentModel value) => this._appointmentData.value = value;
 
   @override
   void onInit() async {
+    
     await getSeparateAppoints(auth.getUserData.value.userId!);
     super.onInit();
   }
@@ -54,13 +58,17 @@ class AppointmentController extends GetxController
 
         for (AppointmentModel appointment in response) {
           allAppoint.add(appointment);
-          appointment.status!.contains("open")
+            // Verifique se o usuário atual é o criador do compromisso
+            if (appointment.userModel!.userId == userId) {
+                appointment.status!.contains("open")
               ? openAppoint.add(appointment)
               : appointment.status!.contains("done")
                   ? doneAppoint.add(appointment)
                   : appointment.status!.contains("canceled")
                       ? canceledAppoint.add(appointment)
                       : allAppoint.add(appointment);
+            } 
+        
         }
 
         change(response, status: RxStatus.success());
@@ -106,16 +114,16 @@ class AppointmentController extends GetxController
     update();
 
     try {
-      appointmentData = AppointmentModel(
+      _appointmentData.value = AppointmentModel(
         date: selectedData.value,
         time: selectedTime.value,
         notes: notes.value,
         userModel: auth.getUserData.value,
         status: appointStatus.value,
       );
-      AppointmentModel response = await _irepository.create(appointmentData);
-      appointmentData.id = response.id;
-      appointmentData.serviceTypeModel = response.serviceTypeModel;
+      AppointmentModel response = await _irepository.create(_appointmentData.value);
+      _appointmentData.value.id = response.id;
+      _appointmentData.value.serviceTypeModel = response.serviceTypeModel;
 
       if (response.id != null) {
         print("Appointment ID response:::${response.id}");
