@@ -45,9 +45,15 @@ Widget appointmentsScreen() {
         ],
         bottom: TabBar(
           tabs: [
-            Tab(text: 'Nächste Termin'),
-            Tab(text: 'Geschlossen'),
-            Tab(text: 'Abgesagt'),
+            Tab(
+                text:
+                    '${appointmentController.openAppoint.length} Nächste Termin'),
+            Tab(
+                text:
+                    '${appointmentController.doneAppoint.length} Geschlossen'),
+            Tab(
+                text:
+                    '${appointmentController.canceledAppoint.length} Abgesagt'),
           ],
         ),
       ),
@@ -93,7 +99,6 @@ Widget appointmentsScreen() {
                                       label: Text("Termin absagen?"),
                                       icon: Icon(Icons.cancel),
                                     ),
-                                  
                                   );
                                 },
                               )
@@ -127,7 +132,6 @@ Widget appointmentsScreen() {
                                       appointment.userModel!.clientNumber!,
                                       appointment.status!,
                                       Container(),
-                                   
                                     );
                                   },
                                 )
@@ -162,7 +166,6 @@ Widget appointmentsScreen() {
                                     appointment.userModel!.clientNumber!,
                                     appointment.status!,
                                     Container(),
-                                
                                   );
                                 },
                               )
@@ -213,12 +216,10 @@ Widget therapyInfoCard(String phone, String email, DateTime date, DateTime time,
             style: TextStyle(fontSize: 10),
           ),
           SizedBox(height: 10),
-           textButton,
+          textButton,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-             
-            ],
+            children: [],
           ),
           SizedBox(height: 10),
         ],

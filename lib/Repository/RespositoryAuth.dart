@@ -15,8 +15,6 @@ class RepositoryAuth extends GetConnect implements IRepositoryAuth {
       request.headers['Authorization'] = 'Bearer $accessToken';
       request.headers['Accept'] = 'application/json';
       defaultContentType = "application/json; charset=utf-8";
-    
-
       return request;
     });
     super.onInit();
