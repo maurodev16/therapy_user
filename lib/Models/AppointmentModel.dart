@@ -59,7 +59,7 @@ class AppointmentModel {
       'time': time!.toIso8601String(),
       'notes': notes,
       'user_obj': userModel!.toJson(),
-      'canceled_by': canceledBy!.userId,
+      'canceled_by': canceledBy?.userId,
       'service_type_obj': serviceTypeModel?.map((serviceType) => serviceType.toJson()).toList(),
       'invoice_obj': invoiceModel?.map((invoiceToJson) => invoiceToJson.toJson()).toList(), 
       'invoice_qnt': invoiceQnt,

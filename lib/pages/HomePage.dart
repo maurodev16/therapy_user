@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:therapy_user/Controller/AuthController.dart';
 import 'package:therapy_user/GlobalWidgets/loadingWidget.dart';
 
 import '../../Controller/AppointmentController.dart';
 import '../GlobalWidgets/customAppBar.dart';
+import '../Utils/Colors.dart';
 
 class HomePage extends StatelessWidget {
   final AppointmentController appointmentController = Get.find();
@@ -65,13 +67,26 @@ Widget appointmentsScreen() {
             height: Get.height,
             child: Obx(() => appointmentController.isLoading.value
                 ? LoadingWidget()
-                : appointmentController.status.isEmpty
-                    ? Center(
-                        child: Icon(
-                          Icons.alarm_off_rounded,
-                          size: 40,
-                        ),
-                      )
+                : appointmentController.openAppoint.isEmpty
+                    ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  "assets/images/coffee-cup.png",
+                                  height: 50,
+                                  width: 50,
+                                  color: cinza,
+                                ),
+                              ),
+                              Text(
+                                "Sie haben keine neuen Termine",
+                                style: GoogleFonts.lato(
+                                  fontSize: 10,
+                                ),
+                              )
+                            ],
+                          )
                     : appointmentController.status.isError
                         ? Center(child: Icon(Icons.error_outline))
                         : appointmentController.status.isSuccess
@@ -111,10 +126,26 @@ Widget appointmentsScreen() {
               height: Get.height,
               child: appointmentController.isLoading.value
                   ? LoadingWidget()
-                  : appointmentController.status.isEmpty
-                      ? Center(
-                          child: Icon(Icons.alarm_off_rounded),
-                        )
+                  : appointmentController.doneAppoint.isEmpty
+                      ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  "assets/images/no-task.png",
+                                  height: 50,
+                                  width: 50,
+                                  color: cinza,
+                                ),
+                              ),
+                              Text(
+                                "Keine geschlossenen Termine",
+                                style: GoogleFonts.lato(
+                                  fontSize: 10,
+                                ),
+                              )
+                            ],
+                          )
                       : appointmentController.status.isError
                           ? Center(child: Icon(Icons.error_outline))
                           : appointmentController.status.isSuccess
@@ -145,10 +176,26 @@ Widget appointmentsScreen() {
             height: Get.height,
             child: Obx(() => appointmentController.isLoading.value
                 ? LoadingWidget()
-                : appointmentController.status.isEmpty
-                    ? Center(
-                        child: Icon(Icons.alarm_off_rounded),
-                      )
+                : appointmentController.canceledAppoint.isEmpty
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                  "assets/images/cancelled.png",
+                                  height: 50,
+                                  width: 50,
+                                  color: cinza,
+                                ),
+                              ),
+                              Text(
+                                "Keine abgesagten Termine",
+                                style: GoogleFonts.lato(
+                                  fontSize: 10,
+                                ),
+                              )
+                            ],
+                          )
                     : appointmentController.status.isError
                         ? Center(child: Icon(Icons.error_outline))
                         : appointmentController.status.isSuccess

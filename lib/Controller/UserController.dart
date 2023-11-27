@@ -23,6 +23,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
       userId: storage.read<String>('userId') ?? '',
       firstname: storage.read<String>('firstname') ?? '',
       lastname: storage.read<String>('lastname') ?? '',
+      phone: storage.read<String>('phone') ?? '',
       email: storage.read<String>('email') ?? '',
       userType: storage.read<String>('userType'),
       clientNumber: storage.read<int>('clientNumber'),
@@ -32,6 +33,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
     print("STORAGE ID:::${storage.read('userId')}");
     print("STORAGE firstname:::${storage.read('firstname')}");
     print("STORAGE lastname:::${storage.read('lastname')}");
+    print("STORAGE phone:::${storage.read('phone')}");
     print("STORAGE userType:::${storage.read('userType')}");
     print("STORAGE EMAIL:::${storage.read('email')}");
     print("STORAGE clientNumber:::${storage.read<int>('clientNumber')}");
@@ -173,6 +175,7 @@ class UserController extends GetxController with StateMixin<UserModel> {
           email: email.value,
           password: password.value,
           phone: phone.value,
+          userType: userType.value,
         ).obs;
 
         UserModel? createdUser = await _iRepositoryUser.create(newUser.value);

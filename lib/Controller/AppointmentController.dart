@@ -141,7 +141,7 @@ class AppointmentController extends GetxController
       }
     } catch (e) {
       print(e.toString());
-      handleLoginError(e.toString());
+     
       update();
     } finally {
       isLoading.value = false;

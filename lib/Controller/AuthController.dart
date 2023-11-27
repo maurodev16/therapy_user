@@ -42,6 +42,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
         userId: storage.read<String>('userId') ?? '',
         clientNumber: storage.read<int>('clientNumber'),
         firstname: storage.read<String>('firstname') ?? '',
+        phone: storage.read<String>('phone') ?? '',
         lastname: storage.read<String>('lastname') ?? '',
         email: storage.read<String>('email') ?? '',
         userType: storage.read<String>('userType') ?? '',
@@ -57,6 +58,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     print("STORAGE clientNumber:::${storage.read('clientNumber')}");
     print("STORAGE FIRSTNAME:::${storage.read('firstname')}");
     print("STORAGE LASTNAME:::${storage.read('lastname')}");
+    print("STORAGE PHONE:::${storage.read('phone')}");
     print("STORAGE EMAIL:::${storage.read('email')}");
     print("STORAGE TOKEN:::${storage.read('token')}");
     print("STORAGE userType:::${storage.read('userType')}");
@@ -66,6 +68,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   RxInt? clientNumber = 0.obs;
   RxString? firstname = ''.obs;
   RxString? lastname = ''.obs;
+  RxString? phone = ''.obs;
   RxString? email = ''.obs;
   RxString? token = ''.obs;
   RxString? userType = "client".obs;
@@ -89,6 +92,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
             user.clientNumber = response.clientNumber;
             user.firstname = response.firstname;
             user.lastname = response.lastname;
+            user.phone = response.phone;
             user.email = response.email;
             user.userType = response.userType;
             user.token = response.token;
@@ -103,6 +107,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           storage.write('clientNumber', _userData.value.clientNumber);
           storage.write('firstname', _userData.value.firstname);
           storage.write('lastname', _userData.value.lastname);
+          storage.write('phone', _userData.value.phone);
           storage.write('email', _userData.value.email);
           storage.write('userType', _userData.value.userType);
           storage.write('token', _userData.value.token);
@@ -112,6 +117,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           clientNumber!.value = _userData.value.clientNumber!;
           firstname!.value = _userData.value.firstname!;
           lastname!.value = _userData.value.lastname!;
+          phone!.value = _userData.value.phone!;
           email!.value = _userData.value.email!;
           userType!.value = _userData.value.userType!;
           token!.value = _userData.value.token!;
@@ -166,6 +172,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     password!.refresh();
     firstname!.refresh();
     lastname!.refresh();
+    phone!.refresh();
     confirmPassword!.refresh();
     email!.refresh();
     update();
@@ -174,6 +181,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
   void cleanInputs() {
     firstname!.value = '';
     lastname!.value = '';
+    phone!.value = '';
     userType!.value = '';
     email!.value = '';
     token!.value = '';
