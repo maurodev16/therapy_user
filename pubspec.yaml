@@ -11,18 +11,24 @@ dependencies:
     sdk: flutter
   get_storage: ^2.1.1
   get: any
-  table_calendar: ^3.0.9
+  table_calendar: any
   flutter_dotenv: ^5.1.0
   iconly:
   flutter_spinkit: ^5.2.0
-  fluttertoast: any
+  fluttertoast: ^8.2.2
   readmore: ^2.2.0
   badges: ^3.1.2
   upgrader: ^8.1.0
   auto_size_text: ^3.0.0
   google_fonts: ^6.1.0
   intl: ^0.18.1
-
+  expandable_text: ^2.3.0
+  image_picker: 
+  file_picker: 
+  images_picker:
+  timeago: ^3.5.0
+  advance_pdf_viewer: any
+  font_awesome_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:

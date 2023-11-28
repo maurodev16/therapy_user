@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:therapy_user/Models/InvoiceModel.dart';
 import '../IRepository/IRepositoryInvoice.dart';
@@ -6,7 +7,7 @@ import '../Utils/const_storage_keys.dart';
 class RepositoryInvoice extends GetConnect implements IRepositoryInvoice {
   @override
   void onInit() async {
-    // httpClient.baseUrl = dotenv.env['API_URL'];
+    httpClient.baseUrl = dotenv.env['API_URL'];
     final accessToken = StorageKeys.storagedToken;
     httpClient.timeout = Duration(seconds: 30);
     httpClient.addRequestModifier<dynamic>((request) {
@@ -21,8 +22,7 @@ class RepositoryInvoice extends GetConnect implements IRepositoryInvoice {
 
   @override
   Future<List<InvoiceModel>> getInvoiceByUserId(String id) async {
-    final response = await httpClient.get(
-        'https://therapy-bv4t.onrender.com/api/v1/invoice/fetch-invoices/$id');
+    final response = await httpClient.get('invoice/fetch-invoices/$id');
     if (response.status.isOk) {
       var jsonResponse = await response.body;
       List<dynamic> postList = jsonResponse;

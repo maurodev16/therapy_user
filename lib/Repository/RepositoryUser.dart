@@ -3,20 +3,21 @@ import 'package:get/get.dart';
 
 import '../IRepository/IRepositoryUser.dart';
 import '../Models/UserModel.dart';
+import '../Utils/const_storage_keys.dart';
 
 class RepositoryUser extends GetConnect implements IRepositoryUser {
   @override
   void onInit() async {
     httpClient.baseUrl = dotenv.env['API_URL'];
+    final accessToken = StorageKeys.storagedToken;
     httpClient.timeout = Duration(seconds: 30);
     httpClient.addRequestModifier<dynamic>((request) {
-      request.headers['Authorization'] = 'Bearer';
+      request.headers['Authorization'] = 'Bearer $accessToken';
       request.headers['Accept'] = 'application/json';
-      defaultContentType="application/json; charset=utf-8";
+      defaultContentType = "application/json; charset=utf-8";
 
       return request;
     });
-
     super.onInit();
   }
 
@@ -24,7 +25,7 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
   Future<UserModel> create(UserModel userModel) async {
     try {
       final response =
-          await httpClient.post('/user/create', body: userModel.toJson());
+          await httpClient.post('user/create', body: userModel.toJson());
 
       if (response.status.isOk) {
         final Map<String, dynamic> responseData = await response.body;
@@ -39,7 +40,7 @@ class RepositoryUser extends GetConnect implements IRepositoryUser {
         return newUser;
       } else {
         print("Signup error: ${response.bodyString}");
-         return throw Exception(response.bodyString);
+        return throw Exception(response.bodyString);
       }
     } catch (e) {
       print("Signup error: $e");

@@ -141,16 +141,12 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     String errorMessage;
     if (error.contains("No User found with this email!")) {
       errorMessage = "No User found with this email!";
-      
     } else if (error.contains("Password is required!")) {
       errorMessage = "Password is required!";
-      
     } else if (error.contains("Incorrect password")) {
       errorMessage = "Incorrect password";
-      
     } else if (error.contains("An error occurred during login.")) {
       errorMessage = "An error occurred during login.";
-      
     } else {
       isLoggedIn.value = true;
       errorMessage = 'Success, you are logged-In';

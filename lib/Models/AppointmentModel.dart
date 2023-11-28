@@ -7,23 +7,27 @@ class AppointmentModel {
   DateTime? date;
   DateTime? time;
   String? notes;
+  List<InvoiceModel>? invoicesModel;
+  int? invoiceQnt;
   UserModel? userModel;
   List<ServiceTypeModel>? serviceTypeModel;
-  List<InvoiceModel>? invoiceModel;
-  int? invoiceQnt;
   String? status;
   UserModel? canceledBy;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   AppointmentModel({
     this.id,
     this.date,
     this.time,
     this.notes,
+    this.invoicesModel,
+    this.invoiceQnt,
     this.userModel,
     this.canceledBy,
     this.serviceTypeModel,
-    this.invoiceModel,
-    this.invoiceQnt,
     this.status,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
@@ -32,16 +36,16 @@ class AppointmentModel {
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       time: json['time'] != null ? DateTime.parse(json['time']) : null,
       notes: json['notes'],
+      invoicesModel: json['invoice_obj'] != null
+          ? (json['invoice_obj'] as List<dynamic>)
+              .map((invoiceObjJson) => InvoiceModel.fromJson(invoiceObjJson))
+              .toList()
+          : null,
+      invoiceQnt: json['invoice_qnt'],
       userModel: UserModel.fromJson(json['user_obj']),
       canceledBy: json['canceled_by'] != null
           ? UserModel.fromJson(json['canceled_by'])
           : null,
-      invoiceModel: json['invoice_obj'] != null
-          ? (json['invoice_obj'] as List<dynamic>)
-              .map((invoice) => InvoiceModel.fromJson(invoice))
-              .toList()
-          : null,
-      invoiceQnt: json['invoice_qnt'],
       serviceTypeModel: json['service_type_obj'] != null
           ? (json['service_type_obj'] as List<dynamic>)
               .map((serviceTypeJson) =>
@@ -49,6 +53,10 @@ class AppointmentModel {
               .toList()
           : null,
       status: json['status'],
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      updatedAt:
+          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
 
@@ -58,12 +66,16 @@ class AppointmentModel {
       'date': date!.toIso8601String(),
       'time': time!.toIso8601String(),
       'notes': notes,
+      'invoice_obj':
+          invoicesModel?.map((invoices) => invoices.toJson()).toList(),
+      'invoice_qnt': invoiceQnt,
       'user_obj': userModel!.toJson(),
       'canceled_by': canceledBy?.userId,
-      'service_type_obj': serviceTypeModel?.map((serviceType) => serviceType.toJson()).toList(),
-      'invoice_obj': invoiceModel?.map((invoiceToJson) => invoiceToJson.toJson()).toList(), 
-      'invoice_qnt': invoiceQnt,
+      'service_type_obj':
+          serviceTypeModel?.map((serviceType) => serviceType.toJson()).toList(),
       'status': status,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 }

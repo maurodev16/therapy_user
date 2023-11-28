@@ -23,34 +23,31 @@ class ProfilePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                       width: Get.width,
+                width: Get.width,
                 child: Card(
-                  
-                  child: Column(
-                          
-                    children: [
+                  child: Column(children: [
                     Text(
                       "Name: ${authController.getUserData.value.lastname}",
                       style: GoogleFonts.lato(color: preto, fontSize: 16),
                     ),
-                  
                     Text(
                       'KN: ${authController.getUserData.value.clientNumber}',
                       style: GoogleFonts.lato(color: preto, fontSize: 12),
                     ),
-              SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Text(
                       'Kontaktinformationen:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${authController.getUserData.value.email}\nTelefon: (123) 456-7890',
-                      style: GoogleFonts.lato( fontSize: 16),
+                      '${authController.getUserData.value.email}\nTelefon: ${authController.getUserData.value.phone}',
+                      style: GoogleFonts.lato(fontSize: 16),
                     ),
                   ]),
                 ),
               ),
-          
+
               // Profilinformationen bearbeiten
               ElevatedButton(
                 onPressed: () {
@@ -59,7 +56,6 @@ class ProfilePage extends StatelessWidget {
                 },
                 child: Text('Profil bearbeiten'),
               ),
-              
             ],
           ),
         ),
