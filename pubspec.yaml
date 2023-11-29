@@ -9,7 +9,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  get_storage: ^2.1.1
   get: any
   table_calendar: any
   flutter_dotenv: ^5.1.0
@@ -27,8 +26,11 @@ dependencies:
   file_picker: 
   images_picker:
   timeago: ^3.5.0
-  advance_pdf_viewer: any
   font_awesome_flutter: ^10.6.0
+  syncfusion_flutter_pdfviewer:
+  firebase_messaging: any
+  firebase_core:
+  flutter_local_notifications: any
 
 dev_dependencies:
   flutter_test:
