@@ -21,7 +21,7 @@ void main() async {
 
   await GetStorage.init();
   await initializeDateFormatting();
- // GetStorage().erase();
+  ////GetStorage().erase();
   runApp(MainApp());
 }
 

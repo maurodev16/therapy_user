@@ -8,7 +8,7 @@ import '../Utils/const_storage_keys.dart';
 class RepositoryAuth extends GetConnect implements IRepositoryAuth {
   @override
   void onInit() async {
-    httpClient.baseUrl = dotenv.env['API_URL'];
+    // httpClient.baseUrl = dotenv.env['API_URL'];
     final accessToken = StorageKeys.storagedToken;
     httpClient.timeout = Duration(seconds: 30);
     httpClient.addRequestModifier<dynamic>((request) {
@@ -24,8 +24,9 @@ class RepositoryAuth extends GetConnect implements IRepositoryAuth {
   @override
   Future<UserModel> login(String email, String password) async {
     try {
-      final response = await httpClient
-          .post('auth/login', body: {'email': email, 'password': password});
+      final response = await httpClient.post(
+          'https://therapy-bv4t.onrender.com/api/v1/auth/login',
+          body: {'email': email, 'password': password});
       print(response);
 
       if (response.status.isOk) {
