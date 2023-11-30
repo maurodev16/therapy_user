@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:therapy_user/BottomNavigationBar/BottomNavigationBar.dart';
 import 'package:therapy_user/GlobalWidgets/loadingWidget.dart';
-import 'package:therapy_user/Utils/Colors.dart';
 
 import '../IRepository/IRepositoryAuth.dart';
 import '../Models/UserModel.dart';
@@ -83,10 +82,15 @@ class AuthController extends GetxController with StateMixin<UserModel> {
             await _iRepositoryAuth.login(email!.value, password!.value);
         print("response:::${response.token}");
 
-        if (response.token!.isNotEmpty) {
+        if (response.token != null) {
           // Atualiza o estado com a resposta bem-sucedida
           change(response, status: RxStatus.success());
+
+          Fluttertoast.showToast(msg: "'Success, you are logged-In'".tr);
+
           Get.offAll(() => BottomNavigationWidget());
+          isLoadingLogin.value = false;
+
           _userData.update((user) {
             user!.userId = response.userId;
             user.clientNumber = response.clientNumber;
@@ -121,11 +125,6 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           email!.value = _userData.value.email!;
           userType!.value = _userData.value.userType!;
           token!.value = _userData.value.token!;
-        } else {
-          Fluttertoast.showToast(
-            msg: 'Error, invalid Field',
-            backgroundColor: verde,
-          );
         }
       } catch (error) {
         print(error.toString());
@@ -137,30 +136,41 @@ class AuthController extends GetxController with StateMixin<UserModel> {
     update();
   }
 
-  Future<void> handleLoginError(String error) async {
-    String errorMessage;
+  Future<String> handleLoginError(String error) async {
+    RxString errorMessage = "".obs;
     if (error.contains("No User found with this email!")) {
-      errorMessage = "No User found with this email!";
-    } else if (error.contains("Password is required!")) {
-      errorMessage = "Password is required!";
-    } else if (error.contains("Incorrect password")) {
-      errorMessage = "Incorrect password";
-    } else if (error.contains("An error occurred during login.")) {
-      errorMessage = "An error occurred during login.";
-    } else {
-      isLoggedIn.value = true;
-      errorMessage = 'Success, you are logged-In';
-      // Exibe uma mensagem de sucesso e navega para a página de container
-      isLoggedIn.value = true;
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        backgroundColor: verde,
-      );
+      isLoggedIn.value = false;
+      Fluttertoast.showToast(msg: errorMessage.value);
+      change(null, status: RxStatus.error(errorMessage.value));
+      return errorMessage.value = "No User found with this email!";
     }
+    if (error.contains("Password is required!")) {
+      isLoggedIn.value = false;
+      Fluttertoast.showToast(msg: errorMessage.value);
+      change(null, status: RxStatus.error(errorMessage.value));
 
-    isLoggedIn.value = false;
-    Fluttertoast.showToast(msg: errorMessage);
-    change(null, status: RxStatus.error(errorMessage));
+      return errorMessage.value = "Password is required!";
+    }
+    if (error.contains("Incorrect password")) {
+      isLoggedIn.value = false;
+      Fluttertoast.showToast(msg: errorMessage.value);
+      change(null, status: RxStatus.error(errorMessage.value));
+
+      return errorMessage.value = "Incorrect password";
+    }
+    if (error.contains("An error occurred during login.")) {
+      isLoggedIn.value = false;
+      Fluttertoast.showToast(msg: errorMessage.value);
+      change(null, status: RxStatus.error(errorMessage.value));
+
+      return errorMessage.value = "An error occurred during login.";
+    } else {
+      isLoggedIn.value = false;
+      Fluttertoast.showToast(msg: errorMessage.value);
+      change(null, status: RxStatus.error(errorMessage.value));
+      return errorMessage.value =
+          "Serveraktualisierung, versuchen Sie es später noch einmal";
+    }
   }
 
 // Método para atualizar o estado e notificar o GetX

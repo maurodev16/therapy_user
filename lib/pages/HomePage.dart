@@ -24,7 +24,7 @@ class HomePage extends StatelessWidget {
 
 Widget appointmentsScreen() {
   final AppointmentController appointmentController = Get.find();
-  final InvoiceController invoiceController = Get.find();
+
   final AuthController auth = Get.find();
 
   return DefaultTabController(
@@ -63,151 +63,99 @@ Widget appointmentsScreen() {
           ],
         ),
       ),
-      body: TabBarView(
-        children: [
-          // ABA OPEN
+      body: RefreshIndicator(
+        onRefresh: appointmentController.reloadAppointmentdata,
+        child: TabBarView(
+          children: [
+            // ABA OPEN
 
-          Obx(
-            () => Container(
-                height: Get.height,
-                child: appointmentController.isLoading.value
-                    ? LoadingWidget()
-                    : appointmentController.openAppoint.isEmpty
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Image.asset(
-                                  "assets/images/coffee-cup.png",
-                                  height: 50,
-                                  width: 50,
-                                  color: cinza,
+            Obx(
+              () => Container(
+                  height: Get.height,
+                  child: appointmentController.isLoading.value
+                      ? LoadingWidget()
+                      : appointmentController.openAppoint.isEmpty
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Image.asset(
+                                    "assets/images/coffee-cup.png",
+                                    height: 50,
+                                    width: 50,
+                                    color: cinza,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Sie haben keine neuen Termine",
-                                style: GoogleFonts.lato(
-                                  fontSize: 10,
-                                ),
-                              )
-                            ],
-                          )
-                        : appointmentController.status.isError
-                            ? Center(child: Icon(Icons.error_outline))
-                            : appointmentController.status.isSuccess
-                                ? ListView.builder(
-                                    itemCount: appointmentController
-                                        .openAppoint.length,
-                                    itemBuilder: (context, index) {
-                                      var appointment = appointmentController
-                                          .openAppoint[index];
-                                      return therapyInfoCard(
-                                        appointment.userModel!.firstname!,
-                                        appointment.userModel!.lastname!,
-                                        appointment.date!,
-                                        appointment.time!,
-                                        appointment.userModel!.clientNumber!,
-                                        appointment.status!,
-                                        appointment.userModel!.phone!,
-                                        appointment.notes!,
-                                        appointment.createdAt!,
-                                      );
-                                    },
-                                  )
-                                : SizedBox()),
-          ),
-
-          ///ABA DONE
-          GetBuilder<AppointmentController>(
-            builder: (doneAppointmentController) => Container(
-              height: Get.height,
-              child: doneAppointmentController.isLoading.value
-                  ? LoadingWidget()
-                  : doneAppointmentController.doneAppoint.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Image.asset(
-                                "assets/images/no-task.png",
-                                height: 50,
-                                width: 50,
-                                color: cinza,
-                              ),
-                            ),
-                            Text(
-                              "Keine geschlossenen Termine",
-                              style: GoogleFonts.lato(
-                                fontSize: 10,
-                              ),
-                            )
-                          ],
-                        )
-                      : doneAppointmentController.status.isError
-                          ? Center(child: Icon(Icons.error_outline))
-                          : doneAppointmentController.status.isSuccess
-                              ? ListView.builder(
-                                  itemCount: doneAppointmentController
-                                      .doneAppoint.length,
-                                  itemBuilder: (context, index) {
-                                    var appointment = doneAppointmentController
-                                        .doneAppoint[index];
-
-                                    return therapyInfoCard(
-                                      appointment.userModel!.firstname!,
-                                      appointment.userModel!.lastname!,
-                                      appointment.date!,
-                                      appointment.time!,
-                                      appointment.userModel!.clientNumber!,
-                                      appointment.status!,
-                                      appointment.userModel!.phone!,
-                                      appointment.notes!,
-                                      appointment.createdAt!,
-                                      // invoiceController.getInvoiceData.value.invoiceUrl == null
-                                    );
-                                  },
+                                Text(
+                                  "Sie haben keine neuen Termine",
+                                  style: GoogleFonts.lato(
+                                    fontSize: 10,
+                                  ),
                                 )
-                              : SizedBox(),
+                              ],
+                            )
+                          : appointmentController.status.isError
+                              ? Center(child: Icon(Icons.error_outline))
+                              : appointmentController.status.isSuccess
+                                  ? ListView.builder(
+                                      itemCount: appointmentController
+                                          .openAppoint.length,
+                                      itemBuilder: (context, index) {
+                                        var appointment = appointmentController
+                                            .openAppoint[index];
+                                        return therapyInfoCard(
+                                          appointment.userModel!.firstname!,
+                                          appointment.userModel!.lastname!,
+                                          appointment.date!,
+                                          appointment.time!,
+                                          appointment.userModel!.clientNumber!,
+                                          appointment.status!,
+                                          appointment.userModel!.phone!,
+                                          appointment.notes!,
+                                          appointment.createdAt!,
+                                        );
+                                      },
+                                    )
+                                  : SizedBox()),
             ),
-          ),
 
-          //ABA CANCELED
-          ///ABA DONE
-          GetBuilder<AppointmentController>(
-            builder: (canceledAppointmentController) => Container(
+            ///ABA DONE
+            GetBuilder<AppointmentController>(
+              builder: (doneAppointmentController) => Container(
                 height: Get.height,
-                child: canceledAppointmentController.isLoading.value
+                child: doneAppointmentController.isLoading.value
                     ? LoadingWidget()
-                    : canceledAppointmentController.canceledAppoint.isEmpty
+                    : doneAppointmentController.doneAppoint.isEmpty
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Center(
                                 child: Image.asset(
-                                  "assets/images/cancelled.png",
+                                  "assets/images/no-task.png",
                                   height: 50,
                                   width: 50,
                                   color: cinza,
                                 ),
                               ),
                               Text(
-                                "Keine abgesagten Termine",
+                                "Keine geschlossenen Termine",
                                 style: GoogleFonts.lato(
                                   fontSize: 10,
                                 ),
                               )
                             ],
                           )
-                        : canceledAppointmentController.status.isError
+                        : doneAppointmentController.status.isError
                             ? Center(child: Icon(Icons.error_outline))
-                            : canceledAppointmentController.status.isSuccess
+                            : doneAppointmentController.status.isSuccess
                                 ? ListView.builder(
-                                    itemCount: canceledAppointmentController
-                                        .canceledAppoint.length,
+                                    itemCount: doneAppointmentController
+                                        .doneAppoint.length,
                                     itemBuilder: (context, index) {
                                       var appointment =
-                                          canceledAppointmentController
-                                              .canceledAppoint[index];
+                                          doneAppointmentController
+                                              .doneAppoint[index];
+
                                       return therapyInfoCard(
                                         appointment.userModel!.firstname!,
                                         appointment.userModel!.lastname!,
@@ -218,12 +166,68 @@ Widget appointmentsScreen() {
                                         appointment.userModel!.phone!,
                                         appointment.notes!,
                                         appointment.createdAt!,
+                                        // invoiceController.getInvoiceData.value.invoiceUrl == null
                                       );
                                     },
                                   )
-                                : SizedBox()),
-          ),
-        ],
+                                : SizedBox(),
+              ),
+            ),
+
+            //ABA CANCELED
+            ///ABA DONE
+            GetBuilder<AppointmentController>(
+              builder: (canceledAppointmentController) => Container(
+                  height: Get.height,
+                  child: canceledAppointmentController.isLoading.value
+                      ? LoadingWidget()
+                      : canceledAppointmentController.canceledAppoint.isEmpty
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Image.asset(
+                                    "assets/images/cancelled.png",
+                                    height: 50,
+                                    width: 50,
+                                    color: cinza,
+                                  ),
+                                ),
+                                Text(
+                                  "Keine abgesagten Termine",
+                                  style: GoogleFonts.lato(
+                                    fontSize: 10,
+                                  ),
+                                )
+                              ],
+                            )
+                          : canceledAppointmentController.status.isError
+                              ? Center(child: Icon(Icons.error_outline))
+                              : canceledAppointmentController.status.isSuccess
+                                  ? ListView.builder(
+                                      itemCount: canceledAppointmentController
+                                          .canceledAppoint.length,
+                                      itemBuilder: (context, index) {
+                                        var appointment =
+                                            canceledAppointmentController
+                                                .canceledAppoint[index];
+                                        return therapyInfoCard(
+                                          appointment.userModel!.firstname!,
+                                          appointment.userModel!.lastname!,
+                                          appointment.date!,
+                                          appointment.time!,
+                                          appointment.userModel!.clientNumber!,
+                                          appointment.status!,
+                                          appointment.userModel!.phone!,
+                                          appointment.notes!,
+                                          appointment.createdAt!,
+                                        );
+                                      },
+                                    )
+                                  : SizedBox()),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -241,96 +245,103 @@ Widget therapyInfoCard(
   DateTime createdAt,
 ) {
   return GetBuilder<InvoiceController>(builder: (invoiceController) {
-    return Card(
-      elevation: 3,
-      margin: EdgeInsets.all(10),
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
+    final AppointmentController appointmentController = Get.find();
+
+    return RefreshIndicator(
+      onRefresh: appointmentController.reloadAppointmentdata,
+      backgroundColor: verde,
+      color: verde,
+      child: Card(
+        elevation: 3,
+        margin: EdgeInsets.all(10),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Row(
-                      children: [
-                        Icon(Icons.person, size: 12),
-                        SizedBox(width: 5),
-                        Text(
-                          'Kunder(in): $firstname $lastname',
-                          style: GoogleFonts.lato(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+          padding: const EdgeInsets.all(5.0),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
+                        children: [
+                          Icon(Icons.person, size: 12),
+                          SizedBox(width: 5),
+                          Text(
+                            'Kunder(in): $firstname $lastname',
+                            style: GoogleFonts.lato(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.calendar_month, size: 12),
-                  SizedBox(width: 5),
-                  Text(
-                    'Datum: ${date.day}.${date.month}.${date.year}',
-                    style: GoogleFonts.lato(fontSize: 15, color: vermelho),
-                  ),
-                  SizedBox(width: 5),
-                  Icon(Icons.alarm, size: 12),
-                  SizedBox(width: 5),
-                  Text(
-                    'Uhr: ${DateFormat.Hm().format(time)}',
-                    style: GoogleFonts.lato(fontSize: 15, color: vermelho),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(Icons.phone_android_rounded, size: 12),
-                  Text(
-                    ' $phone',
-                    style: GoogleFonts.lato(fontSize: 15, color: vermelho),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              notes.isNotEmpty
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.note_alt_outlined, size: 12),
-                            SizedBox(width: 5),
-                            Text(
-                              "Notiz",
-                              style: GoogleFonts.lato(color: vermelho),
-                            ),
-                          ],
-                        ),
-                        SizedBox(width: 5),
-                        ExpandableText(
-                          '$notes',
-                          expandText: 'zeig mehr',
-                          collapseText: 'zeige weniger',
-                          maxLines: 1,
-                          linkColor: azul,
-                        ),
-                      ],
-                    )
-                  : Text(""),
-              SizedBox(height: 15),
-              Text(
-                'Kn: $clienteNumber',
-                style: TextStyle(fontSize: 10),
-              ),
-              Text(
-                'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
-                style: TextStyle(fontSize: 10),
-              ),
-            ],
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month, size: 12),
+                    SizedBox(width: 5),
+                    Text(
+                      'Datum: ${date.day}.${date.month}.${date.year}',
+                      style: GoogleFonts.lato(fontSize: 15, color: vermelho),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(Icons.alarm, size: 12),
+                    SizedBox(width: 5),
+                    Text(
+                      'Uhr: ${DateFormat.Hm().format(time)}',
+                      style: GoogleFonts.lato(fontSize: 15, color: vermelho),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.phone_android_rounded, size: 12),
+                    Text(
+                      ' $phone',
+                      style: GoogleFonts.lato(fontSize: 15, color: vermelho),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                notes.isNotEmpty
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.note_alt_outlined, size: 12),
+                              SizedBox(width: 5),
+                              Text(
+                                "Notiz",
+                                style: GoogleFonts.lato(color: vermelho),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 5),
+                          ExpandableText(
+                            '$notes',
+                            expandText: 'zeig mehr',
+                            collapseText: 'zeige weniger',
+                            maxLines: 1,
+                            linkColor: azul,
+                          ),
+                        ],
+                      )
+                    : Text(""),
+                SizedBox(height: 15),
+                Text(
+                  'Kn: $clienteNumber',
+                  style: TextStyle(fontSize: 10),
+                ),
+                Text(
+                  'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
+                  style: TextStyle(fontSize: 10),
+                ),
+              ],
+            ),
           ),
         ),
       ),

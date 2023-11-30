@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  courier_flutter:
+    dependency: "direct main"
+    description:
+      name: courier_flutter
+      sha256: aecd28919f68690a16139387a0c05389b6e5e822e84d38094ae124378cc6be64
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   cross_file:
     dependency: transitive
     description:
@@ -117,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: "7035152271ff67b072a211152846e9f1259cf1be41e34cd3e0b5463d2d6b8419"
+      sha256: "0042cb3b2a76413ea5f8a2b40cec2a33e01d0c937e91f0f7c211fde4f7739ba6"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.0"
+    version: "9.1.1"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -336,6 +344,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.6.6"
+  get_storage:
+    dependency: "direct main"
+    description:
+      name: get_storage
+      sha256: "39db1fffe779d0c22b3a744376e86febe4ade43bf65e06eab5af707dc84185a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   google_fonts:
     dependency: "direct main"
     description:
@@ -596,10 +612,10 @@ packages:
     dependency: transitive
     description:
       name: plugin_platform_interface
-      sha256: da3fdfeccc4d4ff2da8f8c556704c08f912542c5fb3cf2233ed75372384a034d
+      sha256: f4f88d4a900933e7267e2b353594774fc0d07fb072b47eedcd5b54e1ea3269f8
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.6"
+    version: "2.1.7"
   readmore:
     dependency: "direct main"
     description:
@@ -833,10 +849,10 @@ packages:
     dependency: "direct main"
     description:
       name: upgrader
-      sha256: "889c1ece7af143df32e8ee2126f2ef17b2ab6bb7ed8fc3b1b022d7faa4fdab20"
+      sha256: d63081e43d1daa1d0e4f8177b56311523985ac77c25519d559040e3c14fb947e
       url: "https://pub.dev"
     source: hosted
-    version: "8.2.0"
+    version: "8.4.0"
   url_launcher:
     dependency: transitive
     description:
@@ -857,10 +873,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_ios
-      sha256: "4ac97281cf60e2e8c5cc703b2b28528f9b50c8f7cebc71df6bdf0845f647268a"
+      sha256: bba3373219b7abb6b5e0d071b0fe66dfbe005d07517a68e38d4fc3638f35c6d3
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.0"
+    version: "6.2.1"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -967,4 +983,4 @@ packages:
     version: "6.4.2"
 sdks:
   dart: ">=3.3.0-4.0.dev <4.0.0"
-  flutter: ">=3.13.0"
+  flutter: ">=3.13.6"

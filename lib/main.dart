@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -5,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:therapy_user/Controller/AuthController.dart';
+import 'package:therapy_user/Services/firebase_messaging_services.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'BottomNavigationBar/BottomNavigationBar.dart';
@@ -13,15 +15,18 @@ import 'Repository/RespositoryAuth.dart';
 import 'Routers/AppRouters.dart';
 import 'Utils/Colors.dart';
 import 'pages/Authentication/Pages/LoginPage.dart';
+import 'dart:async';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp();
+  final FirebaseMessagingService fms = FirebaseMessagingService();
+  await fms.initialize();
   await dotenv.load(fileName: ".env");
-
   await GetStorage.init();
   await initializeDateFormatting();
-  ////GetStorage().erase();
+
+  /// GetStorage().erase();
   runApp(MainApp());
 }
 
