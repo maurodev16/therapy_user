@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -29,26 +30,25 @@ class FirebaseMessagingService {
 
   // Configura os handlers de mensagens
   Future<void> _setupMessageHandlers() async {
-    _configureMessageOpenHandler();
-    _configureMessageBackgroundHandler();
+    await _configureMessageOpenHandler();
+    await _configureMessageBackgroundHandler();
   }
 
   // Configura o handler para mensagens abertas enquanto o aplicativo está aberto
-  void _configureMessageOpenHandler() {
+  Future<void> _configureMessageOpenHandler() async {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Lógica para manipular mensagens abertas enquanto o aplicativo está aberto
     });
   }
 
   // Configura o handler para mensagens em segundo plano
-  void _configureMessageBackgroundHandler() {
-    FirebaseMessaging.onBackgroundMessage((RemoteMessage message) async {
+  Future<void> _configureMessageBackgroundHandler() async {
+    Firebase.initializeApp();
+
+    FirebaseMessaging.onBackgroundMessage((message) async {
       // Lógica para manipular mensagens em segundo plano
       print("Handling a background message: ${message.messageId}");
       // Reagir à notificação, se houver
-      if (message.notification != null) {
-        // Exemplo: exibir notificação local usando flutter_local_notifications
-      }
     });
   }
 
