@@ -18,19 +18,23 @@ import 'pages/Authentication/Pages/LoginPage.dart';
 import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+@pragma('vm:entry-point')
+Future<void> _firebaseBGH(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  // Lógica para manipular mensagens em segundo plano
+  print("Handling a background message: ${message.messageId}");
+  // Reagir à notificação, se houver
+  _showNotification(message);
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await initializeDateFormatting();
+  await dotenv.load(fileName: ".env");
+  await GetStorage.init();
   final notificationSettings =
       await FirebaseMessaging.instance.requestPermission(provisional: true);
-  Future<void> _firebaseBGH(RemoteMessage message) async {
-    await Firebase.initializeApp();
-    // Lógica para manipular mensagens em segundo plano
-    print("Handling a background message: ${message.data}");
-    // Reagir à notificação, se houver
-    _showNotification(message);
-  }
 
   // Inicializar o pacote de notificações locais
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -82,9 +86,6 @@ Future<void> main() async {
 
     // Lógica adicional conforme necessário
   });
-
-  await dotenv.load(fileName: ".env");
-  await GetStorage.init();
 
   /// GetStorage().erase();
   runApp(MainApp());
