@@ -36,14 +36,7 @@ Future<void> main() async {
   final notificationSettings =
       await FirebaseMessaging.instance.requestPermission(provisional: true);
 
-  // Inicializar o pacote de notificações locais
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  ;
 
   try {
     String? fcmToken = await FirebaseMessaging.instance.getToken();
@@ -124,6 +117,7 @@ class MainApp extends StatelessWidget {
       return GetMaterialApp(
         key: GlobalKey(),
         initialBinding: MyBinding(),
+
         locale: Locale('de', 'DE'),
         debugShowCheckedModeBanner: false,
         defaultTransition: Transition.zoom,
