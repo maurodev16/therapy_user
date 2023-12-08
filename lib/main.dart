@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:therapy_user/Controller/AuthController.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -33,55 +34,15 @@ Future<void> main() async {
   await initializeDateFormatting();
   await dotenv.load(fileName: ".env");
   await GetStorage.init();
-  final notificationSettings =
-      await FirebaseMessaging.instance.requestPermission(provisional: true);
-
-  ;
-
-  try {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-    print("FCM Token: $fcmToken");
-  } catch (e) {
-    print("Error getting FCM Token: $e");
-  }
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print("onMessageOpenedApp: $message");
-  });
-
-  FirebaseMessaging.onBackgroundMessage((_firebaseBGH));
-
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("Mensagem recebida: $message");
-
-    // Acessar dados específicos da mensagem
-    Map<String, dynamic>? messageData = message.data;
-    print("Dados da mensagem: $messageData");
-
-    // Exemplo de acesso a dados específicos, como título e corpo da notificação
-    String? title = messageData['title'];
-    String? body = messageData['body'];
-    String? appointmentId = messageData['appointmentId'];
-
-    if (title != null && body != null && appointmentId != null) {
-      print("Título: $title, Corpo: $body, Appointment ID: $appointmentId");
-
-      // Aqui você pode realizar ações com base nos dados recebidos
-      // por exemplo, mostrar uma notificação local, navegar para uma tela específica, etc.
-      _showNotification(message);
-    }
-
-    // Lógica adicional conforme necessário
-  });
 
   /// GetStorage().erase();
   runApp(MainApp());
+
+OneSignal.shared.setAppId("YOUR_ONESIGNAL_APP_ID");
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+	print("Accepted permission: $accepted");
+});
 }
 
 Future<void> _showNotification(RemoteMessage message) async {
