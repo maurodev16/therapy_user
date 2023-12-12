@@ -38,7 +38,7 @@ class InvoiceModel {
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'user_obj': userObj!.toJson(),
+      'user_obj': userObj?.toJson(),
       'invoice_url': invoiceUrl,
       'over_duo': overDuo!.toIso8601String(),
       'status': invoiceStatus,

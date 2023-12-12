@@ -336,10 +336,10 @@ Widget therapyInfoCard(
                   'Kn: $clienteNumber',
                   style: TextStyle(fontSize: 10),
                 ),
-                Text(
-                  'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
-                  style: TextStyle(fontSize: 10),
-                ),
+                // Text(
+                //   'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
+                //   style: TextStyle(fontSize: 10),
+                // ),
               ],
             ),
           ),

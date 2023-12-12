@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,16 +16,6 @@ import 'Routers/AppRouters.dart';
 import 'Utils/Colors.dart';
 import 'pages/Authentication/Pages/LoginPage.dart';
 import 'dart:async';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-@pragma('vm:entry-point')
-Future<void> _firebaseBGH(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  // Lógica para manipular mensagens em segundo plano
-  print("Handling a background message: ${message.messageId}");
-  // Reagir à notificação, se houver
-  _showNotification(message);
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,37 +23,10 @@ Future<void> main() async {
   await initializeDateFormatting();
   await dotenv.load(fileName: ".env");
   await GetStorage.init();
+  await settingOneSignal();
 
   /// GetStorage().erase();
   runApp(MainApp());
-
-OneSignal.shared.setAppId("YOUR_ONESIGNAL_APP_ID");
-// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-	print("Accepted permission: $accepted");
-});
-}
-
-Future<void> _showNotification(RemoteMessage message) async {
-  // Configurar a notificação local
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    'your_channel_id',
-    'your_channel_name',
-    importance: Importance.max,
-    priority: Priority.high,
-    ticker: 'ticker',
-  );
-
-  var platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
-
-  // Exibir a notificação local
-  await FlutterLocalNotificationsPlugin().show(
-    0, // ID da notificação, deve ser único
-    message.notification!.title, // Título da notificação
-    message.notification!.body, // Corpo da notificação
-    platformChannelSpecifics,
-  );
 }
 
 class MainApp extends StatelessWidget {
@@ -113,4 +75,11 @@ class MainApp extends StatelessWidget {
       );
     });
   }
+}
+
+Future<void> settingOneSignal() async {
+  OneSignal.initialize(dotenv.env["ONESIGNAL_APP_ID"]!);
+
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  // await OneSignal.Notifications.requestPermission(true);
 }
