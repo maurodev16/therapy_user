@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:therapy_user/Controller/AuthController.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -23,7 +22,6 @@ Future<void> main() async {
   await initializeDateFormatting();
   await dotenv.load(fileName: ".env");
   await GetStorage.init();
-  await settingOneSignal();
 
   /// GetStorage().erase();
   runApp(MainApp());
@@ -75,11 +73,4 @@ class MainApp extends StatelessWidget {
       );
     });
   }
-}
-
-Future<void> settingOneSignal() async {
-  OneSignal.initialize(dotenv.env["ONESIGNAL_APP_ID"]!);
-
-// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  // await OneSignal.Notifications.requestPermission(true);
 }
