@@ -70,7 +70,7 @@ Widget appointmentsScreen() {
             () => Container(
                 height: Get.height,
                 child: appointmentController.isLoading.value
-                    ? LoadingWidget()
+                    ? loadingWidget()
                     : appointmentController.openAppoint.isEmpty
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -121,7 +121,7 @@ Widget appointmentsScreen() {
             builder: (doneAppointmentController) => Container(
               height: Get.height,
               child: doneAppointmentController.isLoading.value
-                  ? LoadingWidget()
+                  ? loadingWidget()
                   : doneAppointmentController.doneAppoint.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -176,7 +176,7 @@ Widget appointmentsScreen() {
             builder: (canceledAppointmentController) => Container(
                 height: Get.height,
                 child: canceledAppointmentController.isLoading.value
-                    ? LoadingWidget()
+                    ? loadingWidget()
                     : canceledAppointmentController.canceledAppoint.isEmpty
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -259,12 +259,72 @@ Widget therapyInfoCard(
                         Icon(Icons.person, size: 12),
                         SizedBox(width: 5),
                         Text(
-                          'Kunder(in): $firstname $lastname',
+                          'Kundin(e): $firstname $lastname',
                           style: GoogleFonts.lato(
                               fontSize: 15, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
+                  ),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      // Ação ao selecionar uma opção do menu
+                      if (value == 'login') {
+                        Get.defaultDialog(
+                          title: "Termin stornieren",
+                          content: Column(
+                            children: [
+                              Text(
+                                  "Möchten Sie den Termin wirklich stornieren?"),
+                              SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Get.back(); // Fechar o diálogo
+                                      // Lógica para cancelar o agendamento
+                                      print("Termin wurde storniert");
+                                    },
+                                    child: Text("Ja"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Get.back(); // Fechar o diálogo
+                                      // Lógica para manter o agendamento
+                                      print("Termin behalten");
+                                    },
+                                    child: Text("Nein"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+
+                        print('Login selecionado');
+                      } else if (value == 'logout') {
+                        // Lógica de logout
+                        print('Logout selecionado');
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: 'login',
+                        child: ListTile(
+                          title: Text('Dem Termin absagen'),
+                          trailing: Icon(
+                            Icons.calendar_month,
+                            color: vermelho,
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'logout',
+                        child: Text('Logout'),
+                      ),
+                    ],
                   ),
                 ],
               ),

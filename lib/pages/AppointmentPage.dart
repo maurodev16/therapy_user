@@ -20,15 +20,15 @@ class AppointmentPage extends StatelessWidget {
       builder: (controller) => Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () async{
-              await  controller.reloadAppointmentdata();
-              Get.back();
+              onPressed: () async {
+                await controller.reloadAppointmentdata();
+                Get.back();
               },
               icon: Icon(Icons.arrow_back_ios)),
           title: Text('Sitzungsbuchung'),
         ),
         body: controller.isLoading.value
-            ? LoadingWidget()
+            ? loadingWidget()
             : SingleChildScrollView(
                 padding: EdgeInsets.all(16.0),
                 child: Column(

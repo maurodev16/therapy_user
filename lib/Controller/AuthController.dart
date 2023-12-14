@@ -205,7 +205,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
 
       if (storage.read<String>('token') == "" ||
           storage.read<String>('token') == null) {
-        LoadingWidget();
+        loadingWidget();
         Future.delayed(
             Duration(seconds: 3),
             () => {

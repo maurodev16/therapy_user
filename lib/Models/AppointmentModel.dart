@@ -42,7 +42,9 @@ class AppointmentModel {
               .toList()
           : null,
       invoiceQnt: json['invoice_qnt'],
-      userModel: UserModel.fromJson(json['user_obj']),
+      userModel: json['user_obj'] != null
+          ? UserModel.fromJson(json['user_obj'])
+          : null,
       canceledBy: json['canceled_by'] != null
           ? UserModel.fromJson(json['canceled_by'])
           : null,
