@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
@@ -15,7 +14,7 @@ class LoginPage extends GetView<AuthController> {
     return Scaffold(
       body: controller.isLoadingLogin.value
           ? Center(
-              child: LoadingWidget(),
+              child: loadingWidget(),
             )
           : SingleChildScrollView(
               child: Center(

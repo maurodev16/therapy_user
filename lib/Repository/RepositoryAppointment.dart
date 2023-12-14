@@ -77,6 +77,32 @@ class RepositoryAppointment extends GetConnect
   }
 
   @override
+  Future<AppointmentModel> cancelAppointment(
+      String appointmentID, String userId) async {
+    final response = await httpClient.post(
+        'appointment/fetch-appointments-by-user/$appointmentID',
+        body: {"user_id": userId});
+    if (response.isOk) {
+      var jsonResponse = await response.body;
+      print('Compromisso cancelado com suce  sso');
+      return jsonResponse;
+    } else if (response.statusCode == 403) {
+      var jsonResponse = await response.body;
+      print('Permissão negada para cancelar o compromisso');
+      return jsonResponse;
+    } else if (response.statusCode == 404) {
+      var jsonResponse = await response.body;
+      // Compromisso não encontrado
+      print('Compromisso não encontrado');
+      return jsonResponse;
+    } else {
+      var jsonResponse = await response.body;
+      print('Erro desconhecido');
+      return jsonResponse;
+    }
+  }
+
+  @override
   // ignore: override_on_non_overriding_member
   Future<void> deleteUser(String id) async {}
 
@@ -87,10 +113,7 @@ class RepositoryAppointment extends GetConnect
   }
 
   @override
-  Future<void> deleteAppointment(String id) async {}
-
-  @override
-  Future<void> updateAppointment(String id) async {
+  Future<AppointmentModel> updateAppointment(String id) async {
     throw UnimplementedError();
   }
 }

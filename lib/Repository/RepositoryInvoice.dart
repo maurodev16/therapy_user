@@ -22,7 +22,8 @@ class RepositoryInvoice extends GetConnect implements IRepositoryInvoice {
 
   @override
   Future<List<InvoiceModel>> getInvoiceByUserId(String id) async {
-    final response = await httpClient.get('invoice/fetch-invoices/$id');
+    final response =
+        await httpClient.get('invoice/fetch-invoices-by-user-id/$id');
     if (response.status.isOk) {
       var jsonResponse = await response.body;
       List<dynamic> postList = jsonResponse;

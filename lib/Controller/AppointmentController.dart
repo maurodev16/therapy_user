@@ -171,6 +171,21 @@ class AppointmentController extends GetxController
     update();
   }
 
+  Future<AppointmentModel> cancelAppointment(
+      String appointmentId, String userId) async {
+    // try {
+    AppointmentModel response =
+        await _irepository.cancelAppointment(appointmentId, userId);
+    if (response.id!.isEmpty) {
+      change([], status: RxStatus.success());
+    } else {}
+    return response;
+    // } catch (error) {
+    // Tratamento de erro, se necessário
+    //print('Erro no cancelamento: $error');
+    //}
+  }
+
   Future<void> reloadAppointmentdata() async {
     await getSeparateAppoints(auth.getUserData.value.userId!);
   }

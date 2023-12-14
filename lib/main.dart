@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,16 +15,6 @@ import 'Routers/AppRouters.dart';
 import 'Utils/Colors.dart';
 import 'pages/Authentication/Pages/LoginPage.dart';
 import 'dart:async';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-@pragma('vm:entry-point')
-Future<void> _firebaseBGH(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  // Lógica para manipular mensagens em segundo plano
-  print("Handling a background message: ${message.messageId}");
-  // Reagir à notificação, se houver
-  _showNotification(message);
-}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,77 +22,9 @@ Future<void> main() async {
   await initializeDateFormatting();
   await dotenv.load(fileName: ".env");
   await GetStorage.init();
-  final notificationSettings =
-      await FirebaseMessaging.instance.requestPermission(provisional: true);
-
-  ;
-
-  try {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
-    print("FCM Token: $fcmToken");
-  } catch (e) {
-    print("Error getting FCM Token: $e");
-  }
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    print("onMessageOpenedApp: $message");
-  });
-
-  FirebaseMessaging.onBackgroundMessage((_firebaseBGH));
-
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print("Mensagem recebida: $message");
-
-    // Acessar dados específicos da mensagem
-    Map<String, dynamic>? messageData = message.data;
-    print("Dados da mensagem: $messageData");
-
-    // Exemplo de acesso a dados específicos, como título e corpo da notificação
-    String? title = messageData['title'];
-    String? body = messageData['body'];
-    String? appointmentId = messageData['appointmentId'];
-
-    if (title != null && body != null && appointmentId != null) {
-      print("Título: $title, Corpo: $body, Appointment ID: $appointmentId");
-
-      // Aqui você pode realizar ações com base nos dados recebidos
-      // por exemplo, mostrar uma notificação local, navegar para uma tela específica, etc.
-      _showNotification(message);
-    }
-
-    // Lógica adicional conforme necessário
-  });
 
   /// GetStorage().erase();
   runApp(MainApp());
-}
-
-Future<void> _showNotification(RemoteMessage message) async {
-  // Configurar a notificação local
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    'your_channel_id',
-    'your_channel_name',
-    importance: Importance.max,
-    priority: Priority.high,
-    ticker: 'ticker',
-  );
-
-  var platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
-
-  // Exibir a notificação local
-  await FlutterLocalNotificationsPlugin().show(
-    0, // ID da notificação, deve ser único
-    message.notification!.title, // Título da notificação
-    message.notification!.body, // Corpo da notificação
-    platformChannelSpecifics,
-  );
 }
 
 class MainApp extends StatelessWidget {
