@@ -5,6 +5,7 @@ class InvoiceModel {
   String? id;
   UserModel? userObj;
   String? invoiceUrl;
+  String? invoiceName;
   DateTime? overDuo;
   AppointmentModel? appointmentObj;
   String? invoiceStatus;
@@ -14,6 +15,7 @@ class InvoiceModel {
     this.id,
     this.userObj,
     this.invoiceUrl,
+    this.invoiceName,
     this.overDuo,
     this.invoiceStatus,
     this.appointmentObj,
@@ -27,6 +29,7 @@ class InvoiceModel {
           ? UserModel.fromJson(json['user_obj'])
           : null,
       invoiceUrl: json['invoice_url'],
+      invoiceName: json['invoice_name'],
       overDuo:
           json['over_duo'] != null ? DateTime.parse(json['over_duo']) : null,
       invoiceStatus: json['status'],
@@ -40,6 +43,7 @@ class InvoiceModel {
       '_id': id,
       'user_obj': userObj!.toJson(),
       'invoice_url': invoiceUrl,
+      'invoice_name': invoiceName,
       'over_duo': overDuo!.toIso8601String(),
       'status': invoiceStatus,
       'appointment_obj': appointmentObj,
