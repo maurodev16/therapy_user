@@ -71,6 +71,10 @@ class AppointmentController extends GetxController
 
         change(response, status: RxStatus.success());
       } else {
+        allAppoint.value = [];
+        openAppoint.value = [];
+        doneAppoint.value = [];
+        canceledAppoint.value = [];
         change([], status: RxStatus.empty());
         // Limpe as listas existentes.
         return [];
@@ -111,42 +115,43 @@ class AppointmentController extends GetxController
     isLoading.value = true;
     update();
 
-    try {
-      _appointmentData.value = AppointmentModel(
-        date: selectedData.value,
-        time: selectedTime.value,
-        notes: notes.value,
-        userModel: auth.getUserData.value,
-        status: appointStatus.value,
+    // try {
+    _appointmentData.value = AppointmentModel(
+      date: selectedData.value,
+      time: selectedTime.value,
+      notes: notes.value,
+      userModel: auth.getUserData.value,
+      status: appointStatus.value,
+    );
+    AppointmentModel response =
+        await _irepository.create(_appointmentData.value);
+    _appointmentData.value.id = response.id;
+    _appointmentData.value.serviceTypeModel = response.serviceTypeModel;
+
+    if (response.id != null) {
+      print("Appointment ID response:::${response.id}");
+      change([], status: RxStatus.success());
+      Fluttertoast.showToast(
+        msg: 'Suppi, Deine Termin wurde erfolgreich gebucht!',
+        backgroundColor: verde,
       );
-      AppointmentModel response =
-          await _irepository.create(_appointmentData.value);
-      _appointmentData.value.id = response.id;
-      _appointmentData.value.serviceTypeModel = response.serviceTypeModel;
 
-      if (response.id != null) {
-        print("Appointment ID response:::${response.id}");
-        change([], status: RxStatus.success());
-        Fluttertoast.showToast(
-          msg: 'Suppi, Deine Termin wurde erfolgreich gebucht!',
-          backgroundColor: verde,
-        );
-
-        Get.back();
-        reloadAppointmentdata();
-        update();
-
-        return response;
-      }
-    } catch (e) {
-      print(e.toString());
-
+      Get.back();
+      reloadAppointmentdata();
       update();
-    } finally {
-      isLoading.value = false;
-      update();
+
+      return response;
     }
-    update();
+    //}
+    // catch (e) {
+    //   print(e.toString());
+
+    //   update();
+    // } finally {
+    //   isLoading.value = false;
+    //   update();
+    // }
+    //  update();
     return appointmentData;
   }
 

@@ -72,7 +72,7 @@ class AppointmentModel {
           invoicesModel?.map((invoices) => invoices.toJson()).toList(),
       'invoice_qnt': invoiceQnt,
       'user_obj': userModel!.toJson(),
-      'canceled_by': canceledBy?.userId,
+      'canceled_by': canceledBy?.toJson(),
       'service_type_obj':
           serviceTypeModel?.map((serviceType) => serviceType.toJson()).toList(),
       'status': status,

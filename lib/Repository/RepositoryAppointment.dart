@@ -25,26 +25,22 @@ class RepositoryAppointment extends GetConnect
 
   @override
   Future<AppointmentModel> create(AppointmentModel appointmentModel) async {
-    try {
-      final response = await httpClient.post('appointment/create-appointment',
-          body: appointmentModel.toJson());
+    // try {
+    final response = await httpClient.post('appointment/create-appointment',
+        body: appointmentModel.toJson());
 
-      if (response.status.isOk) {
-        final Map<String, dynamic> responseData = await response.body;
-
-        final newAppointment = AppointmentModel.fromJson(responseData);
-
-        print("responseData::::: $responseData");
-
-        print("Appointment::::: ${newAppointment.id}");
-
-        return newAppointment;
-      } else {
-        return throw Exception(response.body);
-      }
-    } catch (e) {
-      return throw Exception(e.toString());
+    if (response.status.isOk) {
+      final Map<String, dynamic> responseData = await response.body;
+      final newAppointment = AppointmentModel.fromJson(responseData);
+      print("responseData::::: $responseData");
+      print("Appointment::::: ${newAppointment.id}");
+      return newAppointment;
+    } else {
+      return throw Exception(response.bodyString);
     }
+    // } catch (e) {
+    //   return throw Exception(e.toString());
+    // }
   }
 
   @override
