@@ -55,9 +55,10 @@ class MainApp extends StatelessWidget {
         ),
         home: UpgradeAlert(
           upgrader: Upgrader(
-              dialogStyle: GetPlatform.isAndroid
-                  ? UpgradeDialogStyle.material
-                  : UpgradeDialogStyle.cupertino),
+            dialogStyle: GetPlatform.isAndroid
+                ? UpgradeDialogStyle.material
+                : UpgradeDialogStyle.cupertino,
+          ),
           child: Obx(
             () {
               return authController.isLoggedIn.value

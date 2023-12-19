@@ -115,43 +115,42 @@ class AppointmentController extends GetxController
     isLoading.value = true;
     update();
 
-    // try {
-    _appointmentData.value = AppointmentModel(
-      date: selectedData.value,
-      time: selectedTime.value,
-      notes: notes.value,
-      userModel: auth.getUserData.value,
-      status: appointStatus.value,
-    );
-    AppointmentModel response =
-        await _irepository.create(_appointmentData.value);
-    _appointmentData.value.id = response.id;
-    _appointmentData.value.serviceTypeModel = response.serviceTypeModel;
-
-    if (response.id != null) {
-      print("Appointment ID response:::${response.id}");
-      change([], status: RxStatus.success());
-      Fluttertoast.showToast(
-        msg: 'Suppi, Deine Termin wurde erfolgreich gebucht!',
-        backgroundColor: verde,
+    try {
+      _appointmentData.value = AppointmentModel(
+        date: selectedData.value,
+        time: selectedTime.value,
+        notes: notes.value,
+        userModel: auth.getUserData.value,
+        status: appointStatus.value,
       );
+      AppointmentModel response =
+          await _irepository.create(_appointmentData.value);
+      _appointmentData.value.id = response.id;
+      _appointmentData.value.serviceTypeModel = response.serviceTypeModel;
 
-      Get.back();
-      reloadAppointmentdata();
+      if (response.id != null) {
+        print("Appointment ID response:::${response.id}");
+        change([], status: RxStatus.success());
+        Fluttertoast.showToast(
+          msg: 'Suppi, Deine Termin wurde erfolgreich gebucht!',
+          backgroundColor: verde,
+        );
+
+        Get.back();
+        reloadAppointmentdata();
+        update();
+
+        return response;
+      }
+    } catch (e) {
+      print(e.toString());
+
       update();
-
-      return response;
+    } finally {
+      isLoading.value = false;
+      update();
     }
-    //}
-    // catch (e) {
-    //   print(e.toString());
-
-    //   update();
-    // } finally {
-    //   isLoading.value = false;
-    //   update();
-    // }
-    //  update();
+    update();
     return appointmentData;
   }
 

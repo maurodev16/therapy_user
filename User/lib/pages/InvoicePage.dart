@@ -97,7 +97,25 @@ class OpenInvoiceListView extends StatelessWidget {
               child: loadingWidget(),
             )
           : invoiceController.status.isEmpty
-              ? Center(child: Text("data"))
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/images/open.png",
+                        height: 50,
+                        width: 50,
+                        color: cinza,
+                      ),
+                    ),
+                    Text(
+                      "Sie haben keine offene Rechnung",
+                      style: GoogleFonts.lato(
+                        fontSize: 10,
+                      ),
+                    )
+                  ],
+                )
               : invoiceController.status.isError
                   ? Center(
                       child: Icon(Icons.error_outline_rounded),
@@ -131,10 +149,25 @@ class PaidInvoiceListView extends StatelessWidget {
               child: loadingWidget(),
             )
           : invoiceController.paidInvoices.isEmpty
-              ? Center(
-                  child: Icon(
-                  Icons.document_scanner,
-                ))
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/images/paid.png",
+                        height: 50,
+                        width: 50,
+                        color: cinza,
+                      ),
+                    ),
+                    Text(
+                      "Nichts zu sehen",
+                      style: GoogleFonts.lato(
+                        fontSize: 10,
+                      ),
+                    )
+                  ],
+                )
               : invoiceController.status.isError
                   ? Center(
                       child: Icon(Icons.error_outline_rounded),
@@ -168,7 +201,25 @@ class RefundedInvoiceListView extends StatelessWidget {
               child: loadingWidget(),
             )
           : invoiceController.stornedInvoices.isEmpty
-              ? Center(child: Icon(Icons.document_scanner))
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/images/storned.png",
+                        height: 50,
+                        width: 50,
+                        color: cinza,
+                      ),
+                    ),
+                    Text(
+                      "Nichts zu sehen",
+                      style: GoogleFonts.lato(
+                        fontSize: 10,
+                      ),
+                    )
+                  ],
+                )
               : invoiceController.status.isError
                   ? Center(
                       child: Icon(Icons.error_outline_rounded),
@@ -202,10 +253,25 @@ class OverDuoInvoiceListView extends StatelessWidget {
               child: loadingWidget(),
             )
           : invoiceController.overdueInvoices.isEmpty
-              ? Center(
-                  child: Icon(
-                  Icons.document_scanner,
-                ))
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        "assets/images/storned.png",
+                        height: 50,
+                        width: 50,
+                        color: cinza,
+                      ),
+                    ),
+                    Text(
+                      "Nichts zu sehen",
+                      style: GoogleFonts.lato(
+                        fontSize: 10,
+                      ),
+                    )
+                  ],
+                )
               : invoiceController.status.isError
                   ? Center(
                       child: Icon(Icons.error_outline_rounded),

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:therapy_user/Models/AppointmentModel.dart';
 
 import '../IRepository/IRepositoryAppointment.dart';
-import '../Models/UserModel.dart';
 import '../Utils/const_storage_keys.dart';
 
 class RepositoryAppointment extends GetConnect
@@ -74,13 +73,15 @@ class RepositoryAppointment extends GetConnect
 
   @override
   Future<AppointmentModel> cancelAppointment(
-      String appointmentID, String userId) async {
-    final response = await httpClient.post(
-        'appointment/fetch-appointments-by-user/$appointmentID',
+    String appointmentId,
+    String userId,
+  ) async {
+    final response = await httpClient.patch(
+        'appointment/cancel-appointment/$appointmentId',
         body: {"user_id": userId});
     if (response.isOk) {
       var jsonResponse = await response.body;
-      print('Compromisso cancelado com suce  sso');
+      print('Compromisso cancelado com sucesso');
       return jsonResponse;
     } else if (response.statusCode == 403) {
       var jsonResponse = await response.body;
@@ -99,17 +100,7 @@ class RepositoryAppointment extends GetConnect
   }
 
   @override
-  // ignore: override_on_non_overriding_member
-  Future<void> deleteUser(String id) async {}
-
-  @override
-  // ignore: override_on_non_overriding_member
-  Future<UserModel> editUser(UserModel userModel) async {
-    return UserModel();
-  }
-
-  @override
-  Future<AppointmentModel> updateAppointment(String id) async {
+  Future<AppointmentModel> updateAppointment(String appointmentID) {
     throw UnimplementedError();
   }
 }

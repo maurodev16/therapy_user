@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,12 +17,13 @@ import 'dart:async';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  ///await Firebase.initializeApp();
   await initializeDateFormatting();
   await dotenv.load(fileName: ".env");
   await GetStorage.init();
 
-  //GetStorage().erase();
+  // GetStorage().erase();
   runApp(MainApp());
 }
 

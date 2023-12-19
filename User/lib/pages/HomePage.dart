@@ -10,8 +10,9 @@ import '../../../Controller/InvoiceController.dart';
 import '../GlobalWidgets/customAppBar.dart';
 import '../Utils/Colors.dart';
 
+final AppointmentController appointmentController = Get.find();
+
 class HomePage extends StatelessWidget {
-  final AppointmentController appointmentController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +23,6 @@ class HomePage extends StatelessWidget {
 }
 
 Widget appointmentsScreen() {
-  final AppointmentController appointmentController = Get.find();
-
   final AuthController auth = Get.find();
 
   return DefaultTabController(
@@ -110,6 +109,8 @@ Widget appointmentsScreen() {
                                         appointment.userModel!.phone!,
                                         appointment.notes!,
                                         appointment.createdAt!,
+                                        appointment.id!,
+                                        auth.getUserData.value.userId!,
                                       );
                                     },
                                   )
@@ -162,6 +163,8 @@ Widget appointmentsScreen() {
                                       appointment.userModel!.phone!,
                                       appointment.notes!,
                                       appointment.createdAt!,
+                                      appointment.id!,
+                                      auth.getUserData.value.userId!,
                                       // invoiceController.getInvoiceData.value.invoiceUrl == null
                                     );
                                   },
@@ -217,6 +220,8 @@ Widget appointmentsScreen() {
                                         appointment.userModel!.phone!,
                                         appointment.notes!,
                                         appointment.createdAt!,
+                                        appointment.id!,
+                                        auth.getUserData.value.userId!,
                                       );
                                     },
                                   )
@@ -238,6 +243,8 @@ Widget therapyInfoCard(
   String phone,
   String notes,
   DateTime createdAt,
+  String appointmentId,
+  String userId,
 ) {
   return GetBuilder<InvoiceController>(builder: (invoiceController) {
     return Card(
@@ -267,40 +274,37 @@ Widget therapyInfoCard(
                     ),
                   ),
                   PopupMenuButton<String>(
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: 'login',
+                        child: ListTile(
+                          title: Text(
+                            'Termin absagen',
+                            style: GoogleFonts.lato(
+                              fontSize: 18,
+                              color: cinza,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.cancel_presentation_rounded,
+                            color: cinza,
+                            size: 25,
+                          ),
+                        ),
+                      ),
+                    ],
                     onSelected: (value) {
                       // Ação ao selecionar uma opção do menu
                       if (value == 'login') {
                         Get.defaultDialog(
                           title: "Termin stornieren",
-                          content: Column(
-                            children: [
-                              Text(
-                                  "Möchten Sie den Termin wirklich stornieren?"),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Get.back(); // Fechar o diálogo
-                                      // Lógica para cancelar o agendamento
-                                      print("Termin wurde storniert");
-                                    },
-                                    child: Text("Ja"),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Get.back(); // Fechar o diálogo
-                                      // Lógica para manter o agendamento
-                                      print("Termin behalten");
-                                    },
-                                    child: Text("Nein"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                          onConfirm: () {
+                            print(appointmentId);
+                            print(userId);
+                            appointmentController.cancelAppointment(
+                                appointmentId, userId);
+                          },
+                          onCancel: () {},
                         );
 
                         print('Login selecionado');
@@ -309,22 +313,6 @@ Widget therapyInfoCard(
                         print('Logout selecionado');
                       }
                     },
-                    itemBuilder: (BuildContext context) => [
-                      PopupMenuItem<String>(
-                        value: 'login',
-                        child: ListTile(
-                          title: Text('Dem Termin absagen'),
-                          trailing: Icon(
-                            Icons.calendar_month,
-                            color: vermelho,
-                          ),
-                        ),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'logout',
-                        child: Text('Logout'),
-                      ),
-                    ],
                   ),
                 ],
               ),
@@ -389,6 +377,8 @@ Widget therapyInfoCard(
               //   'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
               //   style: TextStyle(fontSize: 10),
               // ),
+              Text(appointmentId),
+              Text(userId),
             ],
           ),
         ),

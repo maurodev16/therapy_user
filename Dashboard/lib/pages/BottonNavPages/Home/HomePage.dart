@@ -115,6 +115,7 @@ Widget widgetAppointmentsHome() {
                                       appointment.userModel!.phone!,
                                       appointment.notes!,
                                       appointment.createdAt!,
+                                      "",
                                       Container(
                                         child: Stack(
                                           alignment: Alignment.topRight,
@@ -211,6 +212,8 @@ Widget widgetAppointmentsHome() {
                                       appointment.userModel!.phone!,
                                       appointment.notes!,
                                       appointment.createdAt!,
+                                      "",
+
                                       // invoiceController.getInvoiceData.value.invoiceUrl == null
                                       Container(
                                         child: Stack(
@@ -310,6 +313,7 @@ Widget widgetAppointmentsHome() {
                                         appointment.userModel!.phone!,
                                         appointment.notes!,
                                         appointment.createdAt!,
+                                        appointment.canceledBy,
                                         Obx(
                                           () => invoiceController
                                                       .getPickedFile ==

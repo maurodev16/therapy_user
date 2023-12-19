@@ -13,7 +13,7 @@ class AppointmentModel {
   UserModel? userModel;
   List<ServiceTypeModel>? serviceTypeModel;
   String? status;
-  UserModel? canceledBy;
+  String? canceledBy;
   DateTime? createdAt;
   DateTime? updatedAt;
   AppointmentModel({
@@ -46,9 +46,7 @@ class AppointmentModel {
       userModel: json['user_obj'] != null
           ? UserModel.fromJson(json['user_obj'])
           : null,
-      canceledBy: json['canceled_by'] != null
-          ? UserModel.fromJson(json['canceled_by'])
-          : null,
+      canceledBy: json['canceled_by'],
       serviceTypeModel: json['service_type_obj'] != null
           ? (json['service_type_obj'] as List<dynamic>)
               .map((serviceTypeJson) =>
@@ -73,7 +71,7 @@ class AppointmentModel {
           invoicesModel?.map((invoices) => invoices.toJson()).toList(),
       'invoice_qnt': invoiceQnt,
       'user_obj': userModel!.toJson(),
-      'canceled_by': canceledBy?.adminId,
+      'canceled_by': canceledBy,
       'service_type_obj':
           serviceTypeModel?.map((serviceType) => serviceType.toJson()).toList(),
       'status': status,

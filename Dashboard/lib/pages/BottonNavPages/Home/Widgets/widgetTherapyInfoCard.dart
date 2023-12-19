@@ -18,6 +18,7 @@ Widget widgetTherapyInfoCard(
   String phone,
   String notes,
   DateTime createdAt,
+  String? canceledBy,
   Widget invoiceUploadWidget,
 ) {
   return GetBuilder<InvoiceController>(builder: (invoiceController) {
@@ -104,13 +105,33 @@ Widget widgetTherapyInfoCard(
                     )
                   : Text(""),
               SizedBox(height: 15),
-              Text(
-                'Kn: $clienteNumber',
-                style: TextStyle(fontSize: 10),
-              ),
-              Text(
-                'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
-                style: TextStyle(fontSize: 10),
+              Container(
+                height: 40,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Kn: $clienteNumber',
+                          style: GoogleFonts.lato(fontSize: 10),
+                        ),
+                        Text(
+                          'Erstellt am: ${createdAt.day}.${createdAt.month}.${createdAt.year}',
+                          style: GoogleFonts.lato(fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    canceledBy == null || canceledBy.isEmpty
+                        ? SizedBox.shrink()
+                        : Text(
+                            'Termin vom $canceledBy abgesagt',
+                            style:
+                                GoogleFonts.lato(fontSize: 10, color: vermelho),
+                          ),
+                  ],
+                ),
               ),
             ],
           ),
