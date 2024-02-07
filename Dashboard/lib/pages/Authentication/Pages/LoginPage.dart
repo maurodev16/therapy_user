@@ -27,14 +27,16 @@ class LoginPage extends GetView<AuthController> {
                     children: [
                       SizedBox(height: Get.height * 0.2),
                       Hero(
-                          tag: "tagLogo",
-                          child: Text(
-                            "Dasboard",
-                            style: GoogleFonts.tajawal(
-                                fontSize: 35, color: vermelho),
-                          )),
+                        tag: "tagLogo",
+                        child: Text(
+                          "Dasboard",
+                          style: GoogleFonts.tajawal(
+                            fontSize: 35,
+                            color: vermelho,
+                          ),
+                        ),
+                      ),
                       SizedBox(height: Get.height * 0.1),
-
                       Container(
                         width: 0.95 * Get.width,
                         child: Obx(
@@ -160,7 +162,7 @@ class LoginPage extends GetView<AuthController> {
                           children: [
                             Container(
                               child: Text(
-                                "Forgot password?",
+                                "Passwort vergessen?",
                                 style: TextStyle(
                                   fontFamily: "HelveticaNeue",
                                   fontWeight: FontWeight.bold,
@@ -191,7 +193,7 @@ class LoginPage extends GetView<AuthController> {
                                             children: <Widget>[
                                               ListTile(
                                                   title: Text(
-                                                    'Digite aqui o email que voce utilizou para se cadastrar',
+                                                    'Geben Sie hier die E-Mail-Adresse ein, die Sie für die Registrierung angegeben haben.',
                                                     style:
                                                         TextStyle(fontSize: 11),
                                                   ),

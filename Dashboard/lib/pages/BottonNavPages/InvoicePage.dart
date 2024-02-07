@@ -26,31 +26,30 @@ class InvoicePage extends StatelessWidget {
               constraints: BoxConstraints.expand(height: Get.height * 0.1),
               child: TabBar(
                 tabs: [
-                  Obx(() => Tab(
+                  Tab(
                       text: '${invoiceController.openInvoices.length} Offene',
                       icon: Hero(
                           tag: "tagVermelho",
-                          child: Icon(Icons.pending, color: verde, size: 25)))),
-                  Obx(
-                    () => Tab(
-                      text: '${invoiceController.paidInvoices.length} Bezahlt',
-                      icon: Hero(
-                          tag: "tgVerde",
-                          child: Icon(Icons.pending, color: amarelo, size: 25)),
+                          child: Icon(Icons.pending, color: verde, size: 25))),
+                  Tab(
+                    text: '${invoiceController.paidInvoices.length} Bezahlt',
+                    icon: Hero(
+                      tag: "tgVerde",
+                      child: Icon(Icons.pending, color: amarelo, size: 25),
                     ),
                   ),
-                  Obx(() => Tab(
+                  Tab(
                       text:
                           '${invoiceController.stornedInvoices.length} Storniert',
                       icon: Hero(
                           tag: "tagAzul",
-                          child: Icon(Icons.pending, color: azul, size: 25)))),
-                  Obx(() => Tab(
+                          child: Icon(Icons.pending, color: azul, size: 25))),
+                  Tab(
                       text:
                           '${invoiceController.overdueInvoices.length} überfällig',
                       icon: Hero(
                           tag: "tagPreto",
-                          child: Icon(Icons.pending, color: preto, size: 25)))),
+                          child: Icon(Icons.pending, color: preto, size: 25))),
                 ],
               ),
             ),
@@ -88,43 +87,44 @@ class OpenInvoiceListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => ListView.builder(
-        itemCount: invoiceController.openInvoices.length,
-        itemBuilder: (context, index) {
-          InvoiceModel invoice = invoiceController.openInvoices[index];
-          return invoiceController.isOpenInvoicesLoading.value
+      () => invoiceController.isOpenInvoicesLoading.value
+          ? Center(
+              child: loadingWidget(),
+            )
+          : invoiceController.status.isError
               ? Center(
-                  child: loadingWidget(),
+                  child: Icon(Icons.error_outline_rounded),
                 )
-              : invoiceController.status.isEmpty
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Image.asset(
-                            "assets/images/coffee-cup.png",
-                            height: 50,
-                            width: 50,
-                            color: cinza,
-                          ),
-                        ),
-                        Text(
-                          "Sie haben keine neuen Termine",
-                          style: GoogleFonts.lato(
-                            fontSize: 10,
-                          ),
-                        )
-                      ],
+              : invoiceController.status.isSuccess
+                  ? ListView.builder(
+                      itemCount: invoiceController.openInvoices.length,
+                      itemBuilder: (context, index) {
+                        InvoiceModel invoice =
+                            invoiceController.openInvoices[index];
+                        return invoiceController.status.isEmpty
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: Image.asset(
+                                      "assets/images/coffee-cup.png",
+                                      height: 50,
+                                      width: 50,
+                                      color: cinza,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Sie haben keine neuen Termine",
+                                    style: GoogleFonts.lato(
+                                      fontSize: 10,
+                                    ),
+                                  )
+                                ],
+                              )
+                            : InvoiceCard(invoice: invoice);
+                      },
                     )
-                  : invoiceController.status.isError
-                      ? Center(
-                          child: Icon(Icons.error_outline_rounded),
-                        )
-                      : invoiceController.status.isSuccess
-                          ? InvoiceCard(invoice: invoice)
-                          : SizedBox.shrink();
-        },
-      ),
+                  : SizedBox.shrink(),
     );
   }
 }
